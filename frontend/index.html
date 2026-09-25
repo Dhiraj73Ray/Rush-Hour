@@ -2,157 +2,26 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Rush Hour - Web Client</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      background: #1e1e2f;
-      color: #fff;
-      padding-top: 30px;
-    }
-
-    h1 { margin-bottom: 10px; }
-
-    /* 6x6 GRID CONTAINER */
-    #board {
-      display: grid;
-      grid-template-columns: repeat(6, 60px);
-      grid-template-rows: repeat(6, 60px);
-      gap: 6px;
-      background: #2b2b40;
-      padding: 10px;
-      border-radius: 8px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
-    }
-
-    /* HAR EK CELL */
-    .cell {
-      width: 60px;
-      height: 60px;
-      background: #3b3b54;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 20px;
-      font-weight: bold;
-      border-radius: 4px;
-    }
-
-    /* CAR COLORS */
-    .car-A { background: #e74c3c; color: white; } /* Red Main Car */
-    .car-B { background: #3498db; color: white; } /* Blue Truck */
-    .car-C { background: #2ecc71; color: white; } /* Green Car */
-
-    /* CONTROLS */
-    .controls {
-      margin-top: 20px;
-      display: flex;
-      gap: 10px;
-    }
-
-    input, button {
-      padding: 10px;
-      font-size: 16px;
-      border-radius: 5px;
-      border: none;
-    }
-
-    button {
-      background: #9b59b6;
-      color: white;
-      cursor: pointer;
-    }
-
-    button:hover { background: #8e44ad; }
-    #status { margin-top: 15px; font-size: 18px; font-weight: bold; }
-  </style>
+  <title>Rush Hour - Fullstack Client</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <h1>🚗 Rush Hour Game</h1>
-  <div id="board"></div>
+  <div class="container">
+    <h1>🚗 Rush Hour Engine</h1>
+    
+    <div id="board"></div>
 
-  <div class="controls">
-    <input type="text" id="carInput" placeholder="Car (e.g. A)" maxlength="1" style="width: 100px;">
-    <input type="number" id="stepsInput" placeholder="Steps (e.g. 1 or -1)" style="width: 120px;">
-    <button onclick="sendMove()">Move</button>
+    <div class="controls">
+      <input type="text" id="carInput" placeholder="Car (A)" maxlength="1" style="max-width: 80px;">
+      <input type="number" id="stepsInput" placeholder="Steps (+1 / -1)">
+      <button id="moveBtn">Move</button>
+      <button id="resetBtn">Reset</button>
+    </div>
+
+    <div id="status"></div>
   </div>
 
-  <div id="status"></div>
-
-  <script>
-    const API_URL = "http://127.0.0.1:8000";
-
-    // 1. Backend se state fetch karke render karne wala function
-    async function loadBoard() {
-      try {
-        const response = await fetch(`${API_URL}/state`);
-        const data = await response.json();
-        
-        renderGrid(data.board);
-
-        if (data.is_won) {
-          document.getElementById("status").innerText = "🎉 Congratulations! You Win!";
-          document.getElementById("status").style.color = "#2ecc71";
-        }
-      } catch (err) {
-        console.error("API Error:", err);
-      }
-    }
-
-    // 2. 2D array se 36 HTML divs generate karna
-    function renderGrid(board) {
-      const boardContainer = document.getElementById("board");
-      boardContainer.innerHTML = ""; // Purana board clear
-
-      for (let r = 0; r < 6; r++) {
-        for (let c = 0; c < 6; c++) {
-          const val = board[r][c];
-          const cell = document.createElement("div");
-          cell.classList.add("cell");
-
-          if (val !== ".") {
-            cell.innerText = val;
-            cell.classList.add(`car-${val}`);
-          }
-
-          boardContainer.appendChild(cell);
-        }
-      }
-    }
-
-    // 3. Move request bhejne wala function
-    async function sendMove() {
-      const carId = document.getElementById("carInput").value.trim().toUpperCase();
-      const steps = parseInt(document.getElementById("stepsInput").value);
-
-      if (!carId || isNaN(steps)) {
-        alert("Please enter a valid Car ID and Steps!");
-        return;
-      }
-
-      const res = await fetch(`${API_URL}/move`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ car_id: carId, steps: steps })
-      });
-
-      const updatedData = await res.json();
-      renderGrid(updatedData.board);
-
-      if (updatedData.is_won) {
-        document.getElementById("status").innerText = "🎉 Congratulations! You Win!";
-      }
-
-      // Input box reset
-      document.getElementById("stepsInput").value = "";
-    }
-
-    // Pehli baar page khulte hi load karo
-    loadBoard();
-  </script>
+  <script src="app.js"></script>
 </body>
 </html>

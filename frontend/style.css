@@ -1,0 +1,106 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #14141e;
+  color: #f1f2f6;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #1f1f2e;
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+}
+
+h1 {
+  font-size: 24px;
+  margin-bottom: 18px;
+  letter-spacing: 0.5px;
+}
+
+#board {
+  display: grid;
+  grid-template-columns: repeat(6, 56px);
+  grid-template-rows: repeat(6, 56px);
+  gap: 6px;
+  background: #2a2a3d;
+  padding: 8px;
+  border-radius: 8px;
+}
+
+.cell {
+  width: 56px;
+  height: 56px;
+  background: #393952;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+/* Specific car colors */
+.car-A { background: #e84118; color: #fff; }
+.car-B { background: #0097e6; color: #fff; }
+.car-C { background: #44bd32; color: #fff; }
+
+.controls {
+  margin-top: 20px;
+  display: flex;
+  gap: 8px;
+  width: 100%;
+}
+
+input, button {
+  padding: 10px 14px;
+  font-size: 15px;
+  border-radius: 6px;
+  border: none;
+  outline: none;
+}
+
+input {
+  background: #2f2f45;
+  color: #fff;
+  flex: 1;
+}
+
+button {
+  background: #8c7ae6;
+  color: white;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+
+button:hover {
+  background: #7158e2;
+}
+
+button#resetBtn {
+  background: #718093;
+}
+button#resetBtn:hover {
+  background: #57606f;
+}
+
+#status {
+  margin-top: 14px;
+  font-size: 15px;
+  font-weight: 600;
+  min-height: 22px;
+}

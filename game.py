@@ -42,12 +42,27 @@ def clear_board():
                 board[row][col] = "."
 
 
+def move_car(car_id, steps):
+    car = cars[car_id]
+    direction = car["direction"]
+    if direction == "H":
+        draw_car(car_id, car["row"], car["col"] + steps, car["length"], car["direction"])
+        board[car["row"]][car["col"]] = "."
+    elif direction == "V":
+        draw_car(car_id, car["row"] + steps, car["col"], car["length"], car["direction"])
+        board[car["row"]][car["col"]] = "."
+    print_board()
+
+
+
+
 def render():
+    clear_board()
     park_bot()
     print_board()
-    clear_board()
-    print_board()
 
-
+   
 
 render()
+print()
+move_car("A",1)

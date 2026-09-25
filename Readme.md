@@ -1,3 +1,7 @@
-## Full-Stack (Python FastAPI Backend + Plain Frontend) Ready
+## Full-Stack (Python FastAPI Backend + React/JS Frontend)
 
-![alt text](./frontend/image.png)
+### heading for frontend-fullstack setup 
+### 4-way directional arrows (up, down, left, right) buttons
+
+![alt text](arrows.png)
+

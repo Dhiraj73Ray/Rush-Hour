@@ -1,4 +1,3 @@
-# A simple 6x6 grid using a list of lists
 board = [
     ['.', '.', '.', '.', '.', '.'],
     ['.', '.', '.', '.', '.', '.'],
@@ -7,3 +6,8 @@ board = [
     ['.', '.', '.', '.', '.', '.'],
     ['.', '.', '.', '.', '.', '.']
 ]
+
+board[2][4] = 'X'
+
+for row in board:
+    print(" ".join(row))

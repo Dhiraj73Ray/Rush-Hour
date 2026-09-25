@@ -10,6 +10,16 @@ board = [
 # for row in board:
 #     print(" ".join(row))
 
+def print_board():
+    for row in board:
+        print(" ".join(row))
+
+# This is car's Garage
+cars = {
+    "A":{"row":2, "col":1, "length":3, "direction":"V"},
+    "B":{"row":2, "col":1, "length":3, "direction":"H"},
+}
+
 def draw_car(letter, start_row, start_col, length, direction):
     for step in range(length):
         if direction == "H":
@@ -17,9 +27,7 @@ def draw_car(letter, start_row, start_col, length, direction):
         elif direction == "V":
             board[start_row + step][start_col] = letter
 
-    for row in board:
-        print(" ".join(row))
+for id, data in cars.items():
+    draw_car(id, data["row"], data["col"], data["length"], data["direction"])
 
-
-draw_car("A", 2, 1, 3, "V") 
-
+print_board()

@@ -7,14 +7,19 @@ board = [
     ['.', '.', '.', '.', '.', '.']
 ]
 
-board[2][1] = "A"
-board[2][2] = "A"
+# for row in board:
+#     print(" ".join(row))
+
+def draw_car(letter, start_row, start_col, length, direction):
+    for step in range(length):
+        if direction == "H":
+            board[start_row][start_col + step] = letter
+        elif direction == "V":
+            board[start_row + step][start_col] = letter
+
+    for row in board:
+        print(" ".join(row))
 
 
-board[0][2] = "B"
-board[1][2] = "B"
-board[2][2] = "B"
+draw_car("A", 2, 1, 3, "V") 
 
-
-for row in board:
-    print(" ".join(row))

@@ -14,9 +14,7 @@ board = [
 
 
 cars = {
-    "A":{"row":0, "col":1, "length":3, "direction":"V"},
-    "B":{"row":3, "col":1, "length":3, "direction":"H"},
-    "C":{"row":3, "col":4, "length":3, "direction":"V"},
+   
 }
 
 
@@ -38,7 +36,6 @@ def park_bot():
 def print_board():
     for row in board:
         print(" ".join(row))
-
 
 
 def clear_board():
@@ -107,15 +104,34 @@ def move_car(car_id, steps):
 def is_won():
     return (cars["A"]["row"] + cars["A"]["length"] - 1 == 5)
 
-   
+
+puzzle_string = ".A.... .A.... .A.... .BBBC. ....C. ....C."
+
+
+def load_puzzle(puzzle_string):
+
+    string = puzzle_string.replace(" ", "")
+    for index, s in enumerate(string):
+        row = index//6
+        col = index % 6
+        # print(row, col)
+        if s != ".":
+            if s in cars:
+                cars[s]["length"] += 1
+                if cars[s]["length"] < 3:
+                    cars[s]["direction"] = "H" if cars[s]["row"] == row else "V"    
+            else:
+                cars[s] = {"row": row, "col": col, "length": 1, "direction": None}
+
+        # print(cars)
+
 
 def render():
     clear_board()
+    load_puzzle(puzzle_string)
     park_bot()
     print_board()
 
-
-   
 
 while(True):
     render()

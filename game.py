@@ -37,8 +37,7 @@ def print_board():
 
 def clear_board():
     for row in range(len(board)):
-        for col in range(len(board)):
-            if col != ".":
+        for col in range(len(board[row])):
                 board[row][col] = "."
 
 
@@ -46,13 +45,25 @@ def move_car(car_id, steps):
     car = cars[car_id]
     direction = car["direction"]
     if direction == "H":
-        draw_car(car_id, car["row"], car["col"] + steps, car["length"], car["direction"])
-        board[car["row"]][car["col"]] = "."
+        new_col = car["col"] + steps
+        if new_col >= 0 and (new_col + car["length"] -1) <= 5:
+            cars[car_id]["col"] = new_col
+        else:
+            print("Wall hit!")
+        # draw_car(car_id, car["row"], car["col"] + steps, car["length"], car["direction"])
+        # board[car["row"]][car["col"]] = "."
+        # cars[car_id]["col"] += steps
     elif direction == "V":
-        draw_car(car_id, car["row"] + steps, car["col"], car["length"], car["direction"])
-        board[car["row"]][car["col"]] = "."
-    print_board()
+        new_row = car["row"] + steps
 
+        if new_row >= 0 and (new_row + car["length"] -1) <= 5:
+            cars[car_id]["row"] = new_row
+        else:
+            print("Wall hit!")
+        # draw_car(car_id, car["row"] + steps, car["col"], car["length"], car["direction"])
+        # board[car["row"]][car["col"]] = "."
+        # cars[car_id]["row"] += steps
+    # print_board()
 
 
 
@@ -61,8 +72,15 @@ def render():
     park_bot()
     print_board()
 
-   
+  
 
 render()
-print()
 move_car("A",1)
+print()
+render()
+move_car("A",1)
+print()
+render()
+move_car("A",1)
+print()
+render() 

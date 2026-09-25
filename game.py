@@ -31,12 +31,23 @@ def park_bot():
         draw_car(id, data["row"], data["col"], data["length"], data["direction"])
 
 
-park_bot()
-
-
-
 def print_board():
     for row in board:
         print(" ".join(row))
 
-print_board()
+def clear_board():
+    for row in range(len(board)):
+        for col in range(len(board)):
+            if col != ".":
+                board[row][col] = "."
+
+
+def render():
+    park_bot()
+    print_board()
+    clear_board()
+    print_board()
+
+
+
+render()

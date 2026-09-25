@@ -7,7 +7,14 @@ board = [
     ['.', '.', '.', '.', '.', '.']
 ]
 
-board[2][4] = 'X'
+board[2][1] = "A"
+board[2][2] = "A"
+
+
+board[0][2] = "B"
+board[1][2] = "B"
+board[2][2] = "B"
+
 
 for row in board:
     print(" ".join(row))

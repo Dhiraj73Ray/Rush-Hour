@@ -42,27 +42,49 @@ def clear_board():
 
 
 def move_car(car_id, steps):
+
     car = cars[car_id]
     direction = car["direction"]
+
     if direction == "H":
         new_col = car["col"] + steps
+
         if new_col >= 0 and (new_col + car["length"] -1) <= 5:
-            cars[car_id]["col"] = new_col
+
+            if steps > 0:
+                front_col = car["col"] + car["length"]
+                if board[front_col][car["col"]] == ".":
+                    cars[car_id]["col"] = new_col
+                else:
+                    print("Blocked by another car!")
+            else:
+                back_col = car["col"] -1
+                if board[back_col][car["col"]] == ".":
+                    cars[car_id]["col"] = new_col
+                else:
+                    print("Blocked by another car!")
         else:
             print("Wall hit!")
-        # draw_car(car_id, car["row"], car["col"] + steps, car["length"], car["direction"])
-        # board[car["row"]][car["col"]] = "."
-        # cars[car_id]["col"] += steps
+
     elif direction == "V":
+
         new_row = car["row"] + steps
 
         if new_row >= 0 and (new_row + car["length"] -1) <= 5:
-            cars[car_id]["row"] = new_row
+            if steps > 0:
+                front_row = car["row"] + car["length"]
+                if board[front_row][car["col"]] == ".":
+                    cars[car_id]["row"] = new_row
+                else:
+                    print("Blocked by another car!")
+            else:
+                back_row = car["row"] -1
+                if board[back_row][car["col"]] == ".":
+                    cars[car_id]["row"] = new_row
+                else:
+                    print("Blocked by another car!")
         else:
             print("Wall hit!")
-        # draw_car(car_id, car["row"] + steps, car["col"], car["length"], car["direction"])
-        # board[car["row"]][car["col"]] = "."
-        # cars[car_id]["row"] += steps
     # print_board()
 
 
@@ -72,15 +94,10 @@ def render():
     park_bot()
     print_board()
 
-  
+   
 
 render()
 move_car("A",1)
-print()
+move_car("A",-1)
+move_car("B",1)
 render()
-move_car("A",1)
-print()
-render()
-move_car("A",1)
-print()
-render() 

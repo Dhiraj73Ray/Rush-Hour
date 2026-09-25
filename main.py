@@ -44,57 +44,46 @@ def clear_board():
 
 
 def move_car(car_id, steps):
-
     car = cars[car_id]
     direction = car["direction"]
-
     if direction == "H":
         new_col = car["col"] + steps
-        if new_col >= 0 and (new_col + car["length"] -1) <= 5:
+        if new_col >= 0 and (new_col + car["length"] - 1) <= 5:
             if steps > 0:
                 front_col = car["col"] + car["length"]
                 if board[car["row"]][front_col] == ".":
                     cars[car_id]["col"] = new_col
-                    return True
+                    return "OK"
                 else:
-                    print("Blocked by another car!")
-                    return False
+                    return "Blocked by another car!"
             else:
-                back_col = car["col"] -1
+                back_col = car["col"] - 1
                 if board[car["row"]][back_col] == ".":
                     cars[car_id]["col"] = new_col
-                    return True
+                    return "OK"
                 else:
-                    print("Blocked by another car!")
-                    return False
+                    return "Blocked by another car!"
         else:
-            print("Wall hit!")
-            return False
-
+            return "Wall hit!"
     elif direction == "V":
         new_row = car["row"] + steps
-        if new_row >= 0 and (new_row + car["length"] -1) <= 5:
+        if new_row >= 0 and (new_row + car["length"] - 1) <= 5:
             if steps > 0:
                 front_row = car["row"] + car["length"]
                 if board[front_row][car["col"]] == ".":
                     cars[car_id]["row"] = new_row
-                    return True
+                    return "OK"
                 else:
-                    print("Blocked by another car!")
-                    return False
-
+                    return "Blocked by another car!"
             else:
-                back_row = car["row"] -1
-
+                back_row = car["row"] - 1
                 if board[back_row][car["col"]] == ".":
                     cars[car_id]["row"] = new_row
-                    return True
+                    return "OK"
                 else:
-                    print("Blocked by another car!")
-                    return False
+                    return "Blocked by another car!"
         else:
-            print("Wall hit!")
-            return False
+            return "Wall hit!"
 
     
 def is_won():
@@ -142,15 +131,24 @@ def get_state():
 def make_move(req: MoveRequest):
     car_id = req.car_id.upper()
     steps = req.steps
+    msg = "OK"
     
     if car_id in cars:
         direction_step = 1 if steps > 0 else -1
         for _ in range(abs(steps)):
-            success = move_car(car_id, direction_step)
-            if success == False:
+            status = move_car(car_id, direction_step)
+            if status != "OK":
+                msg = status
                 break
+    else:
+        msg = f"Car '{car_id}' not found!"
                 
     clear_board()
     park_bot()
     
-    return get_state()
+    return {
+        "board": board,
+        "cars": cars,
+        "is_won": is_won(),
+        "message": msg
+    }

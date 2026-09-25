@@ -48,18 +48,17 @@ def move_car(car_id, steps):
 
     if direction == "H":
         new_col = car["col"] + steps
-
         if new_col >= 0 and (new_col + car["length"] -1) <= 5:
-
             if steps > 0:
                 front_col = car["col"] + car["length"]
-                if board[front_col][car["col"]] == ".":
+                if board[car["row"]][front_col] == ".":
                     cars[car_id]["col"] = new_col
                 else:
                     print("Blocked by another car!")
+
             else:
                 back_col = car["col"] -1
-                if board[back_col][car["col"]] == ".":
+                if board[car["row"]][back_col] == ".":
                     cars[car_id]["col"] = new_col
                 else:
                     print("Blocked by another car!")
@@ -77,6 +76,7 @@ def move_car(car_id, steps):
                     cars[car_id]["row"] = new_row
                 else:
                     print("Blocked by another car!")
+
             else:
                 back_row = car["row"] -1
                 if board[back_row][car["col"]] == ".":

@@ -128,10 +128,10 @@ def load_puzzle(puzzle_string):
 
 def render():
     clear_board()
-    load_puzzle(puzzle_string)
     park_bot()
     print_board()
 
+load_puzzle(puzzle_string)
 
 while(True):
     render()

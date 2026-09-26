@@ -32,6 +32,7 @@ export const useGameState = () => {
     if (car != "." && car != selectedCar) {
       // console.log(cell_id, car)
       setSelectedCar(car);
+      setGameState(prev => prev ? { ...prev, message: "" } : null);
     }
   };
 

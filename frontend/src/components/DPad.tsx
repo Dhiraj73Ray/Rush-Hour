@@ -41,7 +41,7 @@ export const DPad: React.FC<DPadProps> = ({
       <div className="col-start-2 row-start-1 flex justify-center">
         <button 
           onClick={() => onUp?.(selectedCar)} 
-          disabled={isControlDisabled || direction === "H"|| car?.row === 0} 
+          disabled={isControlDisabled || direction === "H" || (car ? car.row === 0 : false)} 
           className={btnClass} 
           aria-label="Move Up"
         >
@@ -55,7 +55,7 @@ export const DPad: React.FC<DPadProps> = ({
       <div className="col-start-1 row-start-2 flex justify-center items-center">
         <button 
           onClick={() => onLeft?.(selectedCar)} 
-          disabled={isControlDisabled || direction === "V" || car?.col === 0} 
+          disabled={isControlDisabled || direction === "V" || (car ? car.col === 0 : false)} 
           className={btnClass} 
           aria-label="Move Left"
         >
@@ -69,7 +69,7 @@ export const DPad: React.FC<DPadProps> = ({
       <div className="col-start-3 row-start-2 flex justify-center items-center">
         <button 
           onClick={() => onRight?.(selectedCar)} 
-          disabled={isControlDisabled || direction === "V"} 
+          disabled={isControlDisabled || direction === "V" || (car ? car.col + car.length - 1 === 5 : false)} 
           className={btnClass} 
           aria-label="Move Right"
         >
@@ -83,7 +83,7 @@ export const DPad: React.FC<DPadProps> = ({
       <div className="col-start-2 row-start-3 flex justify-center">
         <button 
           onClick={() => onDown?.(selectedCar)} 
-          disabled={isControlDisabled || direction === "H"} 
+          disabled={isControlDisabled || direction === "H" || (car ? car.row + car.length - 1 === 5 : false)} 
           className={btnClass} 
           aria-label="Move Down"
         >

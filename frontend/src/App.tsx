@@ -1,7 +1,7 @@
-import { useEffect } from "react";
 import "./App.css";
 import { useGameState } from "./hooks/useGameState";
 import { getCarColor, showSelectedCar } from "./utils/carHelpers";
+import { DPad } from "./components/DPad";
 
 function App() {
   const {
@@ -19,11 +19,28 @@ function App() {
   //   }
   // }, [hoveredCar]);
 
+  const handleMoveUp = () => {
+    console.log("Move Up triggered");
+  };
+
+  const handleMoveDown = () => {
+    console.log("Move Down triggered");
+  };
+
+  const handleMoveLeft = () => {
+    console.log("Move Left triggered");
+  };
+
+  const handleMoveRight = () => {
+    console.log("Move Right triggered");
+  };
+
   return (
     <div className="container">
       <h1>🚗 Rush Hour Engine</h1>
 
-      <div id="board" className="grid grid-cols-6 gap-1.5">
+      <div className="game-container">
+        <div id="board" className="grid grid-cols-6 gap-1.5">
         {gameState?.board.map((row, ridx) =>
           row.map((cell, cidx) => (
             <div
@@ -39,6 +56,15 @@ function App() {
             </div>
           )),
         )}
+      </div>
+        <DPad
+            onUp={handleMoveUp}
+            onDown={handleMoveDown}
+            onLeft={handleMoveLeft}
+            onRight={handleMoveRight}
+          />
+      <div>
+      </div>
       </div>
     </div>
   );

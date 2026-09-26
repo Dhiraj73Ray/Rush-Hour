@@ -14,3 +14,10 @@ body {
   justify-content: center;
   min-height: 100vh;
 }
+
+.game-container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}

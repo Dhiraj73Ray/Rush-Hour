@@ -13,3 +13,8 @@ export interface CarData {
   length: number;
   direction: "H" | "V";
 }
+
+export interface MoveRequest {
+  car_id: string;
+  steps: number;
+}

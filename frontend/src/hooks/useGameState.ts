@@ -19,7 +19,7 @@ export const useGameState = () => {
         }
         loadInitialState()
     }, [])
-    const handleCellClick = (cell_id: string, car: string) => {
+    const handleCellClick = (car: string) => {
         
         if (car != "." && car != selectedCar){
             // console.log(cell_id, car)

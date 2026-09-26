@@ -28,7 +28,7 @@ function App() {
           row.map((cell, cidx) => (
             <div
               key={`${ridx}-${cidx}`}
-              onClick={() => handleCellClick(`${ridx}-${cidx}`, cell)}
+              onClick={() => handleCellClick(cell)}
               onMouseEnter={() => handleMouseEnter(cell)}
               onMouseLeave={() => handleMouseLeave()}
               className={`flex items-center justify-center h-16 w-16 ${getCarColor(

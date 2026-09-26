@@ -6,11 +6,17 @@ import { DPad } from "./components/DPad";
 function App() {
   const {
     gameState,
+    loading,
     selectedCar,
     handleCellClick,
     handleMouseEnter,
     handleMouseLeave,
     hoveredCar,
+    sendMove,
+    handleMoveUp,
+    handleMoveDown,
+    handleMoveLeft,
+    handleMoveRight,
   } = useGameState();
 
   // useEffect(() => {
@@ -19,52 +25,49 @@ function App() {
   //   }
   // }, [hoveredCar]);
 
-  const handleMoveUp = () => {
-    console.log("Move Up triggered");
-  };
-
-  const handleMoveDown = () => {
-    console.log("Move Down triggered");
-  };
-
-  const handleMoveLeft = () => {
-    console.log("Move Left triggered");
-  };
-
-  const handleMoveRight = () => {
-    console.log("Move Right triggered");
-  };
-
   return (
     <div className="container">
       <h1>🚗 Rush Hour Engine</h1>
 
       <div className="game-container">
         <div id="board" className="grid grid-cols-6 gap-1.5">
-        {gameState?.board.map((row, ridx) =>
-          row.map((cell, cidx) => (
-            <div
-              key={`${ridx}-${cidx}`}
-              onClick={() => handleCellClick(cell)}
-              onMouseEnter={() => handleMouseEnter(cell)}
-              onMouseLeave={() => handleMouseLeave()}
-              className={`flex items-center justify-center h-16 w-16 ${getCarColor(
-                cell,
-              )} ${cell === hoveredCar ? "brightness-125" : ""} ${showSelectedCar(cell, selectedCar,ridx, cidx, gameState.cars,)} text-white text-3xl font-bold rounded shadow`}
-            >
-              {cell !== "." && cell}
-            </div>
-          )),
-        )}
-      </div>
+          {loading ? (
+            Array(6).fill(null).map((_, ridx) =>
+              Array(6).fill(null).map((_, cidx) => (
+                <div
+                  key={`loading-${ridx}-${cidx}`}
+                  className="flex items-center justify-center h-16 w-16 bg-gray-700 text-white text-xl font-bold rounded shadow opacity-40 animate-pulse"
+                >
+                  {/* Empty skeleton cell */}Offline
+                </div>
+              ))
+            )
+          ) : (gameState?.board.map((row, ridx) =>
+            row.map((cell, cidx) => (
+              <div
+                key={`${ridx}-${cidx}`}
+                onClick={() => handleCellClick(cell)}
+                onMouseEnter={() => handleMouseEnter(cell)}
+                onMouseLeave={() => handleMouseLeave()}
+                className={`flex items-center justify-center h-16 w-16 
+              ${getCarColor(cell)} 
+              ${cell === hoveredCar ? "brightness-125" : ""} 
+              ${showSelectedCar(cell, selectedCar, ridx, cidx, gameState.cars)} 
+              text-white text-3xl font-bold rounded shadow`}
+              >
+                {cell !== "." && cell}
+              </div>
+            )),
+          ))}
+        </div>
         <DPad
-            onUp={handleMoveUp}
-            onDown={handleMoveDown}
-            onLeft={handleMoveLeft}
-            onRight={handleMoveRight}
-          />
-      <div>
-      </div>
+          onUp={() => handleMoveUp(selectedCar)}
+          onDown={() => handleMoveDown(selectedCar)}
+          onLeft={() => handleMoveLeft(selectedCar)}
+          onRight={() => handleMoveRight(selectedCar)}
+        />
+        <div></div>
+        <button onClick={() => sendMove}>Send Move</button>
       </div>
     </div>
   );

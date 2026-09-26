@@ -2,7 +2,6 @@ import "./App.css";
 import { useGameState } from "./hooks/useGameState";
 import { getCarColor, showSelectedCar } from "./utils/carHelpers";
 import { DPad } from "./components/DPad";
-import { postResetGame } from "./api/gameApi";
 
 function App() {
   const {
@@ -20,16 +19,10 @@ function App() {
     resetGame,
   } = useGameState();
 
-  // useEffect(() => {
-  //   if (hoveredCar) {
-  //     console.log("Hovered car updated to:", hoveredCar);
-  //   }
-  // }, [hoveredCar]);
-
   return (
     <div className="container">
       <h1>🚗 Rush Hour Engine</h1>
-
+      
       <div className="game-container">
         <div id="board" className="grid grid-cols-6 gap-1.5">
           {loading ? (
@@ -39,7 +32,7 @@ function App() {
                   key={`loading-${ridx}-${cidx}`}
                   className="flex items-center justify-center h-16 w-16 bg-gray-700 text-white text-xl font-bold rounded shadow opacity-40 animate-pulse"
                 >
-                  {/* Empty skeleton cell */}Offline
+                  Offline
                 </div>
               ))
             )
@@ -61,12 +54,18 @@ function App() {
             )),
           ))}
         </div>
+
+        {/* FIX: Pass down the missing properties here */}
         <DPad
-          onUp={() => handleMoveUp(selectedCar)}
-          onDown={() => handleMoveDown(selectedCar)}
-          onLeft={() => handleMoveLeft(selectedCar)}
-          onRight={() => handleMoveRight(selectedCar)}
+          selectedCar={selectedCar}
+          loading={loading}
+          gameState={gameState}
+          onUp={handleMoveUp}
+          onDown={handleMoveDown}
+          onLeft={handleMoveLeft}
+          onRight={handleMoveRight}
         />
+        
         <div></div>
         <button onClick={() => resetGame()}>Reset</button>
       </div>

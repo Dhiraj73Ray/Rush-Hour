@@ -83,6 +83,7 @@ export const useGameState = () => {
         const data = await postResetGame();
         // const data = await getGameState();
         setGameState(data);
+        setSelectedCar("")
         setStatus({ message: "Game Reset", color: "" }); 
       } catch (err) {
         setStatus({

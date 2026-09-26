@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { type GameState } from "../types/game";
-import { getGameState, postMoveCar } from "../api/gameApi";
+import { getGameState, postMoveCar, postResetGame } from "../api/gameApi";
 
 export const useGameState = () => {
   const [gameState, setGameState] = useState<GameState | null>(null);
@@ -44,41 +44,55 @@ export const useGameState = () => {
 
 
   const handleMoveUp = (selectedCar: string) => {
-    console.log("Move Down triggered");
+    sendMove(selectedCar, -1);
   };
 
   const handleMoveDown = (selectedCar: string) => {
-    console.log("Move Down triggered");
+    sendMove(selectedCar, 1);
   };
 
   const handleMoveLeft = (selectedCar: string) => {
-    console.log("Move Left triggered");
+    sendMove(selectedCar, -1);
   };
 
   const handleMoveRight = (selectedCar: string) => {
-    console.log("Move Right triggered");
+    sendMove(selectedCar, 1);
   };
 
   const sendMove = async (selectedCar: string, move: number) => {
+    if (!selectedCar) return;
+    setLoading(true);
     try {
-        const result = await postMoveCar({ car_id: selectedCar, steps: move });
-        console.log(result);
-      } catch (err) {
-        setStatus({
-          message: "❌ Cannot connect to backend server!",
-          color: "#e84118",
-        });
-      }
-    try {
-        const data = await getGameState();
+        const data = await postMoveCar({ car_id: selectedCar, steps: move });
+        // const data = await getGameState();
         setGameState(data);
+        setStatus({ message: "", color: "" }); 
       } catch (err) {
         setStatus({
           message: "❌ Cannot connect to backend server!",
           color: "#e84118",
         });
+      }finally{
+        setLoading(false)
       }
   };
+
+  const resetGame = async () => {
+    setLoading(true);
+    try {
+        const data = await postResetGame();
+        // const data = await getGameState();
+        setGameState(data);
+        setStatus({ message: "Game Reset", color: "" }); 
+      } catch (err) {
+        setStatus({
+          message: "❌ Cannot connect to backend server!",
+          color: "#e84118",
+        });
+      }finally{
+        setLoading(false)
+      }
+  }
 
   return {
     gameState,
@@ -95,5 +109,6 @@ export const useGameState = () => {
     handleMoveDown,
     handleMoveLeft,
     handleMoveRight,
+    resetGame,
   };
 };

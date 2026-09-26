@@ -2,6 +2,7 @@ import "./App.css";
 import { useGameState } from "./hooks/useGameState";
 import { getCarColor, showSelectedCar } from "./utils/carHelpers";
 import { DPad } from "./components/DPad";
+import { postResetGame } from "./api/gameApi";
 
 function App() {
   const {
@@ -12,11 +13,11 @@ function App() {
     handleMouseEnter,
     handleMouseLeave,
     hoveredCar,
-    sendMove,
     handleMoveUp,
     handleMoveDown,
     handleMoveLeft,
     handleMoveRight,
+    resetGame,
   } = useGameState();
 
   // useEffect(() => {
@@ -67,7 +68,7 @@ function App() {
           onRight={() => handleMoveRight(selectedCar)}
         />
         <div></div>
-        <button onClick={() => sendMove}>Send Move</button>
+        <button onClick={() => resetGame()}>Reset</button>
       </div>
     </div>
   );

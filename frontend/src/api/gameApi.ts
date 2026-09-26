@@ -18,3 +18,11 @@ export const postMoveCar = async (move: MoveRequest): Promise<GameState> => {
     if (!res.ok) throw new Error("Move action failed");
     return res.json();
 }
+
+export const postResetGame = async() => {
+    const res = await fetch(`${API_URL}/api/reset`,{
+        method: "POST",
+    });
+    if (!res.ok) throw new Error("Backend connection failed");
+    return (res.json());
+}

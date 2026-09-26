@@ -21,3 +21,15 @@ body {
   align-items: center;
   gap: 20px;
 }
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0) translateY(0); }
+  25% { transform: translateX(-4px) translateY(-4px); }
+  75% { transform: translateX(4px) translateY(4px); }
+}
+
+.animate-collide {
+  animation: shake 0.3s ease-in-out;
+  background-color: #ef4444 !important; /* Tailwind red-500 override */
+  filter: brightness(1.5);
+}

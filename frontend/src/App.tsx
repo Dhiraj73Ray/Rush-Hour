@@ -18,6 +18,7 @@ function App() {
     handleMoveRight,
     resetGame,
   } = useGameState();
+  
 
   return (
     <div className="container">
@@ -38,6 +39,7 @@ function App() {
             )
           ) : (gameState?.board.map((row, ridx) =>
             row.map((cell, cidx) => (
+              /* Look down here inside the className string to see how we did it! */
               <div
                 key={`${ridx}-${cidx}`}
                 onClick={() => handleCellClick(cell)}
@@ -46,7 +48,8 @@ function App() {
                 className={`flex items-center justify-center h-16 w-16 
               ${getCarColor(cell)} 
               ${cell === hoveredCar ? "brightness-125" : ""} 
-              ${showSelectedCar(cell, selectedCar, ridx, cidx, gameState.cars)} 
+              ${showSelectedCar(cell, selectedCar, ridx, cidx, gameState.cars)}
+              ${gameState?.message === "Blocked by another car!" && cell === selectedCar ? "animate-collide" : ""}
               text-white text-3xl font-bold rounded shadow`}
               >
                 {cell !== "." && cell}
@@ -55,7 +58,6 @@ function App() {
           ))}
         </div>
 
-        {/* FIX: Pass down the missing properties here */}
         <DPad
           selectedCar={selectedCar}
           loading={loading}

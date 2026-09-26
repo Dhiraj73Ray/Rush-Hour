@@ -62,6 +62,7 @@ export const useGameState = () => {
   const sendMove = async (selectedCar: string, move: number) => {
     if (!selectedCar) return;
     setLoading(true);
+    setGameState(prev => prev ? { ...prev, message: "" } : null);
     try {
         const data = await postMoveCar({ car_id: selectedCar, steps: move });
         // const data = await getGameState();
@@ -94,6 +95,7 @@ export const useGameState = () => {
         setLoading(false)
       }
   }
+  
 
   return {
     gameState,

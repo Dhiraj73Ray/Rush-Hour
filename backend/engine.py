@@ -24,6 +24,10 @@ class RushHourEngine:
                 self.cars[char]["length"] += 1
                 if self.cars[char]["direction"] is None:
                     self.cars[char]["direction"] = "H" if self.cars[char]["row"] == r else "V"
+        # Reject single-cell cars
+        for cid, data in self.cars.items():
+            if data["length"] == 1:
+                raise ValueError(f"Car '{cid}' has length 1, which is not allowed.")
 
     def _clear_board(self):
         for r in range(6):
@@ -46,7 +50,6 @@ class RushHourEngine:
         if "A" not in self.cars:
             return False
         car = self.cars["A"]
-        # Horizontal exit (col 5) ya vertical exit (row 5)
         if car["direction"] == "H":
             return (car["col"] + car["length"] - 1) == 5
         return (car["row"] + car["length"] - 1) == 5
@@ -54,49 +57,59 @@ class RushHourEngine:
     def _move_single_step(self, car_id: str, step: int):
         car = self.cars[car_id]
         d = car["direction"]
-        
+
         if d == "H":
             new_col = car["col"] + step
             if not (0 <= new_col and (new_col + car["length"] - 1) <= 5):
-                return "Wall hit!"
+                return "wall"
             check_col = (car["col"] + car["length"]) if step > 0 else (car["col"] - 1)
             if self.board[car["row"]][check_col] != ".":
-                return "Blocked by another car!"
+                return "blocked"
             car["col"] = new_col
-            return "OK"
-            
+            return "ok"
+
         elif d == "V":
             new_row = car["row"] + step
             if not (0 <= new_row and (new_row + car["length"] - 1) <= 5):
-                return "Wall hit!"
+                return "wall"
             check_row = (car["row"] + car["length"]) if step > 0 else (car["row"] - 1)
             if self.board[check_row][car["col"]] != ".":
-                return "Blocked by another car!"
+                return "blocked"
             car["row"] = new_row
-            return "OK"
-        return "Invalid direction"
+            return "ok"
+        return "invalid"
 
-    def move(self, car_id: str, steps: int) -> str:
+    def move(self, car_id: str, steps: int) -> dict:
         cid = car_id.upper()
         if cid not in self.cars:
-            return f"Car '{cid}' does not exist!"
+            return {"status": "not_found", "message": f"Car '{cid}' does not exist!"}
 
         direction_step = 1 if steps > 0 else -1
-        last_status = "OK"
+        last_status = "ok"
 
         for _ in range(abs(steps)):
             status = self._move_single_step(cid, direction_step)
-            if status != "OK":
+            if status != "ok":
                 last_status = status
                 break
             self._render()
 
         self._render()
-        return last_status
+
+        message_map = {
+            "ok": "OK",
+            "blocked": "Blocked by another car!",
+            "wall": "Wall hit!",
+            "invalid": "Invalid direction",
+            "not_found": f"Car '{cid}' does not exist!",
+        }
+        return {"status": last_status, "message": message_map.get(last_status, "OK")}
 
     def get_state(self):
         return {
             "board": self.board,
             "cars": self.cars,
-            "is_won": self.is_won()
+            "is_won": self.is_won(),
+            "status": "ok",
+            "message": "OK",
         }

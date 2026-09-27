@@ -7,8 +7,8 @@ app = FastAPI(title="Rush Hour Engine API")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
+    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -21,20 +21,20 @@ class MoveRequest(BaseModel):
 
 @app.get("/api/state")
 def get_state():
-    state = engine.get_state()
-    state["message"] = "OK"
-    return state
+    return engine.get_state()
 
 @app.post("/api/move")
 def make_move(req: MoveRequest):
-    status = engine.move(req.car_id, req.steps)
+    result = engine.move(req.car_id, req.steps)
     state = engine.get_state()
-    state["message"] = status
+    state["status"] = result["status"]
+    state["message"] = result["message"]
     return state
 
 @app.post("/api/reset")
 def reset_puzzle():
     engine.reset()
     state = engine.get_state()
+    state["status"] = "ok"
     state["message"] = "Puzzle Reset"
     return state

@@ -21,6 +21,7 @@ function App() {
     handleMouseEnter,
     handleMouseLeave,
     hoveredCar,
+    sendMove,
     handleMoveUp,
     handleMoveDown,
     handleMoveLeft,
@@ -54,15 +55,13 @@ function App() {
         <Board
           gameState={gameState}
           initialLoading={initialLoading}
+          disabled={actionLoading}
           selectedCar={selectedCar}
           hoveredCar={hoveredCar}
           onCellClick={handleCellClick}
           onCellEnter={handleMouseEnter}
           onCellLeave={handleMouseLeave}
-          onSwipeUp={handleMoveUp}
-          onSwipeDown={handleMoveDown}
-          onSwipeLeft={handleMoveLeft}
-          onSwipeRight={handleMoveRight}
+          onMove={sendMove}
         />
 
         <ControlsPanel

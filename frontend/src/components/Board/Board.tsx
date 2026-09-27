@@ -1,86 +1,123 @@
-import { useRef } from "react";
+import { useMemo, useRef, useState, useEffect } from "react";
 import { type GameState } from "../../types/game";
-import { getCarColor, showSelectedCar } from "../../utils/carHelpers";
+import {
+  getCarColor,
+  showSelectedCar,
+  getCarDragBounds,
+  getPreviewBoard,
+} from "../../utils/carHelpers";
 import "./Board.css";
 
 interface BoardProps {
   gameState: GameState | null;
   initialLoading: boolean;
+  disabled: boolean;
   selectedCar: string;
   hoveredCar: string | null;
   onCellClick: (car: string) => void;
   onCellEnter: (car: string) => void;
   onCellLeave: () => void;
-  onSwipeUp: (car: string) => void;
-  onSwipeDown: (car: string) => void;
-  onSwipeLeft: (car: string) => void;
-  onSwipeRight: (car: string) => void;
+  onMove: (car: string, steps: number) => void;
 }
 
-interface SwipeState {
+interface DragState {
   car: string;
   startX: number;
   startY: number;
-  triggered: boolean;
+  cellSize: number;
+  axis: "H" | "V";
+  min: number;
+  max: number;
 }
-
-const SWIPE_THRESHOLD = 18;
 
 export const Board: React.FC<BoardProps> = ({
   gameState,
   initialLoading,
+  disabled,
   selectedCar,
   hoveredCar,
   onCellClick,
   onCellEnter,
   onCellLeave,
-  onSwipeUp,
-  onSwipeDown,
-  onSwipeLeft,
-  onSwipeRight,
+  onMove,
 }) => {
-  const swipeRef = useRef<SwipeState | null>(null);
+  const [previewCar, setPreviewCar] = useState<string | null>(null);
+  const [previewOffset, setPreviewOffset] = useState(0);
+  const dragRef = useRef<DragState | null>(null);
 
-  const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>, cell: string) => {
-    if (cell === ".") return;
+  // Clear preview once the server responds with new board data
+  useEffect(() => {
+    setPreviewCar(null);
+    setPreviewOffset(0);
+  }, [gameState?.board]);
+
+  const handlePointerDown = (
+    e: React.PointerEvent<HTMLDivElement>,
+    cell: string
+  ) => {
+    if (dragRef.current) return;
+    if (disabled || cell === "." || !gameState) return;
+
     (e.currentTarget as Element).setPointerCapture(e.pointerId);
     onCellClick(cell);
-    swipeRef.current = {
+
+    const car = gameState.cars[cell];
+    if (!car) return;
+
+    const rect = e.currentTarget.getBoundingClientRect();
+    const bounds = getCarDragBounds(gameState.board, cell, gameState.cars);
+
+    dragRef.current = {
       car: cell,
       startX: e.clientX,
       startY: e.clientY,
-      triggered: false,
+      cellSize: rect.width,
+      axis: car.direction,
+      min: bounds.min,
+      max: bounds.max,
     };
+    setPreviewCar(cell);
+    setPreviewOffset(0);
   };
 
   const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
-    const sw = swipeRef.current;
-    if (!sw || sw.triggered || !gameState) return;
+    const drag = dragRef.current;
+    if (!drag) return;
 
-    const dx = e.clientX - sw.startX;
-    const dy = e.clientY - sw.startY;
-    const absX = Math.abs(dx);
-    const absY = Math.abs(dy);
+    const dx = e.clientX - drag.startX;
+    const dy = e.clientY - drag.startY;
+    const delta = drag.axis === "H" ? dx : dy;
+    const rawCells = Math.round(delta / drag.cellSize);
+    const clamped = Math.max(drag.min, Math.min(drag.max, rawCells));
+    setPreviewOffset(clamped);
+  };
 
-    if (absX < SWIPE_THRESHOLD && absY < SWIPE_THRESHOLD) return;
+  const finishDrag = () => {
+    const drag = dragRef.current;
+    if (!drag) return;
 
-    const car = gameState.cars[sw.car];
-    if (!car) return;
-
-    if (car.direction === "H" && absX > absY) {
-      if (dx > 0) onSwipeRight(sw.car);
-      else onSwipeLeft(sw.car);
-      sw.triggered = true;
-    } else if (car.direction === "V" && absY > absX) {
-      if (dy > 0) onSwipeDown(sw.car);
-      else onSwipeUp(sw.car);
-      sw.triggered = true;
+    if (previewOffset !== 0) {
+      onMove(drag.car, previewOffset);
+      // Keep preview visible until server responds —
+      // it'll be cleared by the useEffect above.
+    } else {
+      setPreviewCar(null);
+      setPreviewOffset(0);
     }
+    dragRef.current = null;
   };
 
-  const handlePointerUp = () => {
-    swipeRef.current = null;
-  };
+  const displayBoard = useMemo(() => {
+    if (!gameState) return null;
+    return getPreviewBoard(
+      gameState.board,
+      gameState.cars,
+      previewCar,
+      previewOffset
+    );
+  }, [gameState, previewCar, previewOffset]);
+
+  const isDragging = previewCar !== null;
 
   return (
     <section className="game-stage">
@@ -90,10 +127,8 @@ export const Board: React.FC<BoardProps> = ({
           <h1>Find the way out.</h1>
         </div>
 
-        {/* Desktop only */}
         <div className="stage-badge stage-badge-size">6 × 6</div>
 
-        {/* Mobile only — replaces 6×6 */}
         <div className="stage-badge stage-badge-selected">
           <span className="badge-label">SELECTED</span>
           <span
@@ -110,24 +145,32 @@ export const Board: React.FC<BoardProps> = ({
             ? Array.from({ length: 36 }).map((_, i) => (
                 <div key={`load-${i}`} className="board-cell board-cell-loading" />
               ))
-            : gameState?.board.map((row, ridx) =>
+            : displayBoard?.map((row, ridx) =>
                 row.map((cell, cidx) => (
                   <div
                     key={`${ridx}-${cidx}`}
                     onPointerDown={(e) => handlePointerDown(e, cell)}
                     onPointerMove={handlePointerMove}
-                    onPointerUp={handlePointerUp}
-                    onPointerCancel={handlePointerUp}
-                    onMouseEnter={() => onCellEnter(cell)}
-                    onMouseLeave={onCellLeave}
+                    onPointerUp={finishDrag}
+                    onPointerCancel={finishDrag}
+                    onLostPointerCapture={finishDrag}
+                    onMouseEnter={() => !isDragging && onCellEnter(cell)}
+                    onMouseLeave={() => !isDragging && onCellLeave()}
                     className={[
                       "board-cell",
                       getCarColor(cell),
-                      cell === hoveredCar ? "cell-hovered" : "",
-                      showSelectedCar(cell, selectedCar, ridx, cidx, gameState.cars),
+                      cell === hoveredCar && !isDragging ? "cell-hovered" : "",
+                      showSelectedCar(
+                        cell,
+                        selectedCar,
+                        ridx,
+                        cidx,
+                        gameState!.cars
+                      ),
                       gameState?.status === "blocked" && cell === selectedCar
                         ? "animate-collide"
                         : "",
+                      cell === previewCar ? "cell-dragging" : "",
                     ].join(" ")}
                   >
                     {cell !== "." && cell}

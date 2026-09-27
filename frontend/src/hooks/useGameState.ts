@@ -35,24 +35,28 @@ export const useGameState = () => {
     return () => clearInterval(id);
   }, [connectionError, loadInitialState]);
 
-  const handleCellClick = (car: string) => {
+  const handleCellClick = useCallback((car: string) => {
     if (car !== "." && car !== selectedCar) {
       setSelectedCar(car);
-      setGameState((prev) => (prev ? { ...prev, message: "", status: "ok" } : null));
+      setGameState((prev) =>
+        prev ? { ...prev, message: "", status: "ok" } : null
+      );
     }
-  };
+  }, [selectedCar]);
 
-  const handleMouseEnter = (cell: string) => {
+  const handleMouseEnter = useCallback((cell: string) => {
     if (cell === ".") return;
     setHoveredCar(cell);
-  };
+  }, []);
 
-  const handleMouseLeave = () => setHoveredCar(null);
+  const handleMouseLeave = useCallback(() => setHoveredCar(null), []);
 
-  const sendMove = async (carId: string, move: number) => {
-    if (!carId) return;
+  const sendMove = useCallback(async (carId: string, move: number) => {
+    if (!carId || move === 0) return;
     setActionLoading(true);
-    setGameState((prev) => (prev ? { ...prev, message: "", status: "ok" } : null));
+    setGameState((prev) =>
+      prev ? { ...prev, message: "", status: "ok" } : null
+    );
     try {
       const data = await postMoveCar({ car_id: carId, steps: move });
       setGameState(data);
@@ -63,14 +67,51 @@ export const useGameState = () => {
     } finally {
       setActionLoading(false);
     }
-  };
+  }, []);
 
-  const handleMoveUp = (car: string) => sendMove(car, -1);
-  const handleMoveDown = (car: string) => sendMove(car, 1);
-  const handleMoveLeft = (car: string) => sendMove(car, -1);
-  const handleMoveRight = (car: string) => sendMove(car, 1);
+  // Keyboard controls
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (!selectedCar || !gameState) return;
+      const car = gameState.cars[selectedCar];
+      if (!car) return;
 
-  const resetGame = async () => {
+      const arrows = ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"];
+      if (!arrows.includes(e.key)) return;
+
+      e.preventDefault();
+
+      if (car.direction === "H") {
+        if (e.key === "ArrowLeft") sendMove(selectedCar, -1);
+        else if (e.key === "ArrowRight") sendMove(selectedCar, 1);
+      } else {
+        if (e.key === "ArrowUp") sendMove(selectedCar, -1);
+        else if (e.key === "ArrowDown") sendMove(selectedCar, 1);
+      }
+    };
+
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [selectedCar, gameState, sendMove]);
+
+  const handleMoveUp = useCallback(
+    (car: string) => sendMove(car, -1),
+    [sendMove]
+  );
+  const handleMoveDown = useCallback(
+    (car: string) => sendMove(car, 1),
+    [sendMove]
+  );
+  const handleMoveLeft = useCallback(
+    (car: string) => sendMove(car, -1),
+    [sendMove]
+  );
+  const handleMoveRight = useCallback(
+    (car: string) => sendMove(car, 1),
+    [sendMove]
+  );
+
+  const resetGame = useCallback(async () => {
     setActionLoading(true);
     try {
       const data = await postResetGame();
@@ -83,9 +124,12 @@ export const useGameState = () => {
     } finally {
       setActionLoading(false);
     }
-  };
+  }, []);
 
-  const retryConnection = () => loadInitialState();
+  const retryConnection = useCallback(
+    () => loadInitialState(),
+    [loadInitialState]
+  );
 
   return {
     gameState,

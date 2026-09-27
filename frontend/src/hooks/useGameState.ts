@@ -13,21 +13,23 @@ export const useGameState = () => {
   const [hoveredCar, setHoveredCar] = useState<string | null>(null);
 
   useEffect(() => {
-    const loadInitialState = async () => {
-      setLoading(true)
-      try {
-        const data = await getGameState();
-        setGameState(data);
-        setLoading(false)
-      } catch (err) {
-        setStatus({
-          message: "❌ Cannot connect to backend server!",
-          color: "#e84118",
-        });
-      }
-    };
-    loadInitialState();
-  }, []);
+  const loadInitialState = async () => {
+    setLoading(true);
+    try {
+      const data = await getGameState();
+      setGameState(data);
+      setStatus({ message: "", color: "" });
+    } catch {
+      setStatus({
+        message: "❌ Cannot connect to backend server!",
+        color: "#e84118",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+  loadInitialState();
+}, []);
   const handleCellClick = (car: string) => {
     if (car != "." && car != selectedCar) {
       // console.log(cell_id, car)

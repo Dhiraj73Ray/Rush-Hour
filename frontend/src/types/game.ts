@@ -1,11 +1,10 @@
-
 export interface GameState {
     board: string[][];
     is_won: boolean;
     cars: Record<string, CarData>;
-    message?: string|boolean;
+    status?: string;
+    message?: string;
 }
-
 
 export interface CarData {
   row: number;

@@ -8,6 +8,7 @@ function App() {
   const {
     gameState,
     loading,
+    status,
     selectedCar,
     handleCellClick,
     handleMouseEnter,
@@ -76,7 +77,9 @@ function App() {
         isVisible={gameState?.is_won === true} 
         onReset={resetGame} 
       />
-      
+      {status.message && (
+        <p style={{ color: status.color }}>{status.message}</p>
+      )}
     </div>
   );
 }

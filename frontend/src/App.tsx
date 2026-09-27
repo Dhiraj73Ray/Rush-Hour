@@ -3,12 +3,14 @@ import { useGameState } from "./hooks/useGameState";
 import { getCarColor, showSelectedCar } from "./utils/carHelpers";
 import { DPad } from "./components/DPad";
 import CongratsOverlay from "./components/Congrats/CongratsOverlay";
+import ConnectionErrorOverlay from "./components/ConnectionError/ConnectionErrorOverlay";
 
 function App() {
   const {
     gameState,
-    loading,
-    status,
+    initialLoading,
+    actionLoading,
+    connectionError,
     selectedCar,
     handleCellClick,
     handleMouseEnter,
@@ -19,15 +21,16 @@ function App() {
     handleMoveLeft,
     handleMoveRight,
     resetGame,
+    retryConnection,
   } = useGameState();
 
   return (
     <div className="container">
       <h1>🚗 Rush Hour Engine</h1>
-      
+
       <div className="game-container">
         <div id="board" className="grid grid-cols-6 gap-1.5">
-          {loading ? (
+          {initialLoading ? (
             Array(6).fill(null).map((_, ridx) =>
               Array(6).fill(null).map((_, cidx) => (
                 <div
@@ -38,48 +41,51 @@ function App() {
                 </div>
               ))
             )
-          ) : (gameState?.board.map((row, ridx) =>
-            row.map((cell, cidx) => (
-              <div
-                key={`${ridx}-${cidx}`}
-                onClick={() => handleCellClick(cell)}
-                onMouseEnter={() => handleMouseEnter(cell)}
-                onMouseLeave={() => handleMouseLeave()}
-                className={`flex items-center justify-center h-16 w-16 
-              ${getCarColor(cell)} 
-              ${cell === hoveredCar ? "brightness-125" : ""} 
-              ${showSelectedCar(cell, selectedCar, ridx, cidx, gameState.cars)}
-              ${gameState?.message === "Blocked by another car!" && cell === selectedCar ? "animate-collide" : ""}
-              text-white text-3xl font-bold rounded shadow`}
-              >
-                {cell !== "." && cell}
-              </div>
-            )),
-          ))}
+          ) : (
+            gameState?.board.map((row, ridx) =>
+              row.map((cell, cidx) => (
+                <div
+                  key={`${ridx}-${cidx}`}
+                  onClick={() => handleCellClick(cell)}
+                  onMouseEnter={() => handleMouseEnter(cell)}
+                  onMouseLeave={() => handleMouseLeave()}
+                  className={`flex items-center justify-center h-16 w-16 
+                ${getCarColor(cell)} 
+                ${cell === hoveredCar ? "brightness-125" : ""} 
+                ${showSelectedCar(cell, selectedCar, ridx, cidx, gameState.cars)}
+                ${gameState?.status === "blocked" && cell === selectedCar ? "animate-collide" : ""}
+                text-white text-3xl font-bold rounded shadow`}
+                >
+                  {cell !== "." && cell}
+                </div>
+              ))
+            )
+          )}
         </div>
 
         <DPad
           selectedCar={selectedCar}
-          loading={loading}
+          loading={actionLoading}
           gameState={gameState}
           onUp={handleMoveUp}
           onDown={handleMoveDown}
           onLeft={handleMoveLeft}
           onRight={handleMoveRight}
         />
-        
+
         <div></div>
         <button onClick={() => resetGame()}>Reset</button>
       </div>
 
-      {/* Renders when is_won is true. Resets and unmounts automatically when resetGame is called. */}
-      <CongratsOverlay 
-        isVisible={gameState?.is_won === true} 
-        onReset={resetGame} 
+      <CongratsOverlay
+        isVisible={gameState?.is_won === true}
+        onReset={resetGame}
       />
-      {status.message && (
-        <p style={{ color: status.color }}>{status.message}</p>
-      )}
+
+      <ConnectionErrorOverlay
+        isVisible={connectionError}
+        onRetry={retryConnection}
+      />
     </div>
   );
 }

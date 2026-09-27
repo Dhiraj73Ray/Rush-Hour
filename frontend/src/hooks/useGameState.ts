@@ -1,110 +1,98 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { type GameState } from "../types/game";
 import { getGameState, postMoveCar, postResetGame } from "../api/gameApi";
 
 export const useGameState = () => {
   const [gameState, setGameState] = useState<GameState | null>(null);
   const [selectedCar, setSelectedCar] = useState<string>("");
-  const [loading, setLoading] = useState(false);
-  const [status, setStatus] = useState<{ message: string; color: string }>({
-    message: "",
-    color: "",
-  });
+  const [initialLoading, setInitialLoading] = useState(true);
+  const [actionLoading, setActionLoading] = useState(false);
+  const [connectionError, setConnectionError] = useState(false);
   const [hoveredCar, setHoveredCar] = useState<string | null>(null);
 
-  useEffect(() => {
-  const loadInitialState = async () => {
-    setLoading(true);
+  const loadInitialState = useCallback(async () => {
+    setInitialLoading(true);
     try {
       const data = await getGameState();
       setGameState(data);
-      setStatus({ message: "", color: "" });
+      setConnectionError(false);
     } catch {
-      setStatus({
-        message: "❌ Cannot connect to backend server!",
-        color: "#e84118",
-      });
+      setConnectionError(true);
     } finally {
-      setLoading(false);
+      setInitialLoading(false);
     }
-  };
-  loadInitialState();
-}, []);
+  }, []);
+
+  useEffect(() => {
+    loadInitialState();
+  }, [loadInitialState]);
+
+  // Auto-retry every 5 seconds while connection is lost
+  useEffect(() => {
+    if (!connectionError) return;
+    const interval = setInterval(() => {
+      loadInitialState();
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [connectionError, loadInitialState]);
+
   const handleCellClick = (car: string) => {
-    if (car != "." && car != selectedCar) {
-      // console.log(cell_id, car)
+    if (car !== "." && car !== selectedCar) {
       setSelectedCar(car);
-      setGameState(prev => prev ? { ...prev, message: "" } : null);
+      setGameState(prev => prev ? { ...prev, message: "", status: "ok" } : null);
     }
   };
 
   const handleMouseEnter = (cell: string) => {
-    if (cell === ".") return; // Skip empty board slots
+    if (cell === ".") return;
     setHoveredCar(cell);
   };
 
   const handleMouseLeave = () => setHoveredCar(null);
 
-
-  const handleMoveUp = (selectedCar: string) => {
-    sendMove(selectedCar, -1);
-  };
-
-  const handleMoveDown = (selectedCar: string) => {
-    sendMove(selectedCar, 1);
-  };
-
-  const handleMoveLeft = (selectedCar: string) => {
-    sendMove(selectedCar, -1);
-  };
-
-  const handleMoveRight = (selectedCar: string) => {
-    sendMove(selectedCar, 1);
-  };
-
-  const sendMove = async (selectedCar: string, move: number) => {
-    if (!selectedCar) return;
-    setLoading(true);
-    setGameState(prev => prev ? { ...prev, message: "" } : null);
+  const sendMove = async (carId: string, move: number) => {
+    if (!carId) return;
+    setActionLoading(true);
+    setGameState(prev => prev ? { ...prev, message: "", status: "ok" } : null);
     try {
-        const data = await postMoveCar({ car_id: selectedCar, steps: move });
-        // const data = await getGameState();
-        setGameState(data);
-        setStatus({ message: "", color: "" }); 
-      } catch (err) {
-        setStatus({
-          message: "❌ Cannot connect to backend server!",
-          color: "#e84118",
-        });
-      }finally{
-        setLoading(false)
-      }
+      const data = await postMoveCar({ car_id: carId, steps: move });
+      setGameState(data);
+      setConnectionError(false);
+    } catch {
+      setConnectionError(true);
+    } finally {
+      setActionLoading(false);
+    }
   };
+
+  const handleMoveUp = (car: string) => sendMove(car, -1);
+  const handleMoveDown = (car: string) => sendMove(car, 1);
+  const handleMoveLeft = (car: string) => sendMove(car, -1);
+  const handleMoveRight = (car: string) => sendMove(car, 1);
 
   const resetGame = async () => {
-    setLoading(true);
+    setActionLoading(true);
     try {
-        const data = await postResetGame();
-        // const data = await getGameState();
-        setGameState(data);
-        setSelectedCar("")
-        setStatus({ message: "Game Reset", color: "" }); 
-      } catch (err) {
-        setStatus({
-          message: "❌ Cannot connect to backend server!",
-          color: "#e84118",
-        });
-      }finally{
-        setLoading(false)
-      }
-  }
-  
+      const data = await postResetGame();
+      setGameState(data);
+      setSelectedCar("");
+      setConnectionError(false);
+    } catch {
+      setConnectionError(true);
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const retryConnection = () => {
+    loadInitialState();
+  };
 
   return {
     gameState,
-    status,
-    loading,
-    setStatus,
+    initialLoading,
+    actionLoading,
+    connectionError,
     selectedCar,
     handleCellClick,
     handleMouseEnter,
@@ -116,5 +104,6 @@ export const useGameState = () => {
     handleMoveLeft,
     handleMoveRight,
     resetGame,
+    retryConnection,
   };
 };

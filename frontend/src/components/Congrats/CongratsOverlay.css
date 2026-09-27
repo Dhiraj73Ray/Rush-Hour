@@ -25,6 +25,22 @@
   animation: popIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 }
 
+.overlay-close-btn {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: transparent;
+  border: none;
+  color: #a0aec0; /* Subdued grey */
+  cursor: pointer;
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
 /* Animation Container for SVG & Text */
 .animation-container {
   position: relative;

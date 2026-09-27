@@ -35,6 +35,7 @@ function App() {
     goNextLevel,
     retryConnection,
     showCongrats,
+    setShowCongrats,
   } = useGameState();
 
   const [pickerOpen, setPickerOpen] = useState(false);
@@ -105,6 +106,7 @@ function App() {
       <CongratsOverlay
         isVisible={showCongrats}
         onReset={handleReset}
+        onClose={() => setShowCongrats(false)}
       />
 
       <ConnectionErrorOverlay

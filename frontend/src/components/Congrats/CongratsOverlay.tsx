@@ -2,17 +2,16 @@ import React from 'react';
 import './CongratsOverlay.css';
 
 interface CongratsOverlayProps {
-  /** Controls the visibility of the overlay */
   isVisible: boolean;
-  /** Triggered when the user clicks Play Again */
   onReset: () => void;
-  /** Optional z-index override, defaults to 9999 */
+  onClose?: () => void;
   zIndex?: number;
 }
 
 const CongratsOverlay: React.FC<CongratsOverlayProps> = ({ 
   isVisible, 
   onReset,
+  onClose,
   zIndex = 9999 
 }) => {
   // Directly driven by the prop, no internal state needed
@@ -21,6 +20,24 @@ const CongratsOverlay: React.FC<CongratsOverlayProps> = ({
   return (
     <div className="congrats-backdrop" style={{ zIndex }}>
       <div className="congrats-card">
+
+        {onClose && (
+          <button className="overlay-close-btn" onClick={onClose} aria-label="Close overlay">
+            <svg 
+              viewBox="0 0 24 24" 
+              width="20" 
+              height="20" 
+              stroke="currentColor" 
+              strokeWidth="2.5" 
+              fill="none" 
+              strokeLinecap="round" 
+              strokeLinejoin="round"
+            >
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        )}
         
         <div className="animation-container">
           {/* Animated Turquoise Star */}

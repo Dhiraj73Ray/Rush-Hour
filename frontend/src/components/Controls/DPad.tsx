@@ -13,10 +13,7 @@ interface DPadProps {
 }
 
 export const DPad: React.FC<DPadProps> = ({
-  onUp,
-  onDown,
-  onLeft,
-  onRight,
+  onUp, onDown, onLeft, onRight,
   className = "",
   selectedCar,
   loading,
@@ -25,6 +22,9 @@ export const DPad: React.FC<DPadProps> = ({
   const isControlDisabled = loading || !selectedCar;
   const car = gameState?.cars && selectedCar ? gameState.cars[selectedCar] : null;
   const direction = car?.direction;
+  const size = gameState?.board.length ?? 6;
+  const last = size - 1;
+
 
   return (
     <div className={`dpad-grid ${className}`}>
@@ -58,7 +58,7 @@ export const DPad: React.FC<DPadProps> = ({
           disabled={
             isControlDisabled ||
             direction === "V" ||
-            (car ? car.col + car.length - 1 === 5 : false)
+            (car ? car.col + car.length - 1 === last : false)
           }
           aria-label="Move Right"
         >
@@ -74,7 +74,7 @@ export const DPad: React.FC<DPadProps> = ({
           disabled={
             isControlDisabled ||
             direction === "H" ||
-            (car ? car.row + car.length - 1 === 5 : false)
+            (car ? car.row + car.length - 1 === last : false)
           }
           aria-label="Move Down"
         >

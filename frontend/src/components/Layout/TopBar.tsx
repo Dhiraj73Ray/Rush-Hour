@@ -3,7 +3,10 @@ import "./TopBar.css";
 
 interface TopBarProps {
   level: number;
+  totalLevels: number;
   online: boolean;
+  canPrev: boolean;
+  canNext: boolean;
   onMenu: () => void;
   onPrevLevel: () => void;
   onNextLevel: () => void;
@@ -12,7 +15,10 @@ interface TopBarProps {
 
 export const TopBar: React.FC<TopBarProps> = ({
   level,
+  totalLevels,
   online,
+  canPrev,
+  canNext,
   onMenu,
   onPrevLevel,
   onNextLevel,
@@ -41,6 +47,9 @@ export const TopBar: React.FC<TopBarProps> = ({
 
       <LevelNav
         level={level}
+        total={totalLevels}
+        canPrev={canPrev}
+        canNext={canNext}
         onPrev={onPrevLevel}
         onNext={onNextLevel}
         onOpenLevels={onOpenLevels}

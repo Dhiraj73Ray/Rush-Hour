@@ -71,21 +71,21 @@ export function getCarDragBounds(
   const car = cars[carId];
   if (!car) return { min: 0, max: 0 };
 
+  const size = board.length;
+  const last = size - 1;
   const isH = car.direction === "H";
   let maxPos = 0;
   let maxNeg = 0;
 
-  // Forward (right / down)
   while (true) {
     const offset = maxPos + 1;
     const r = isH ? car.row : car.row + car.length - 1 + offset;
     const c = isH ? car.col + car.length - 1 + offset : car.col;
-    if (r > 5 || c > 5) break;
+    if (r > last || c > last) break;
     if (board[r][c] !== ".") break;
     maxPos = offset;
   }
 
-  // Backward (left / up)
   while (true) {
     const offset = maxNeg - 1;
     const r = isH ? car.row : car.row + offset;
@@ -111,23 +111,22 @@ export function getPreviewBoard(
   if (!previewCar || previewOffset === 0 || !cars[previewCar]) return board;
 
   const car = cars[previewCar];
+  const size = board.length;
   const next = board.map((row) => [...row]);
 
-  // Erase the car
-  for (let r = 0; r < 6; r++) {
-    for (let c = 0; c < 6; c++) {
+  for (let r = 0; r < size; r++) {
+    for (let c = 0; c < size; c++) {
       if (next[r][c] === previewCar) next[r][c] = ".";
     }
   }
 
-  // Redraw at offset
   for (let i = 0; i < car.length; i++) {
     if (car.direction === "H") {
       const c = car.col + previewOffset + i;
-      if (c >= 0 && c < 6) next[car.row][c] = previewCar;
+      if (c >= 0 && c < size) next[car.row][c] = previewCar;
     } else {
       const r = car.row + previewOffset + i;
-      if (r >= 0 && r < 6) next[r][car.col] = previewCar;
+      if (r >= 0 && r < size) next[r][car.col] = previewCar;
     }
   }
 

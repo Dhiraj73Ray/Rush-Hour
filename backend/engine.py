@@ -1,16 +1,42 @@
+from levels import LEVELS
 class RushHourEngine:
-    def __init__(self, puzzle_string: str = ".A.... .A.... .A.... .BBBC. ....C. ....C."):
+    def __init__(self, puzzle_string: str = None, level_index: int = 0):
+        if puzzle_string is None and (LEVELS and len(LEVELS) > 0):
+            puzzle_string = LEVELS[level_index]["puzzle"]
+        elif puzzle_string is None:
+            puzzle_string = ".A.... .A.... .A.... .BBBC. ....C. ....C."
+            level_index = -1
+            
         self.puzzle_string = puzzle_string
+        self.level_index = level_index
+        self.board_size = 6
         self.board = [["." for _ in range(6)] for _ in range(6)]
         self.cars = {}
         self.reset()
 
-    def reset(self, new_puzzle: str = None):
-        if new_puzzle:
-            self.puzzle_string = new_puzzle
+    def load_level(self, index: int):
+        if index < 0 or index >= len(LEVELS):
+            raise ValueError(f"Level {index} does not exist")
+        self.level_index = index
+        self.puzzle_string = LEVELS[index]["puzzle"]
         self.cars.clear()
         self._load_puzzle(self.puzzle_string)
         self._render()
+
+    def reset(self, new_puzzle: str = ".A.... .A.... .A.... .BBBC. ....C. ....C."):
+        if self.level_index >= 0:
+            self.puzzle_string = LEVELS[self.level_index]["puzzle"]
+        elif new_puzzle and new_puzzle != ".A.... .A.... .A.... .BBBC. ....C. ....C.":
+            self.puzzle_string = new_puzzle
+            self.level_index = -1
+        else:
+            self.puzzle_string = new_puzzle
+            self.level_index = -1
+
+        self.cars.clear()
+        self._load_puzzle(self.puzzle_string)
+        self._render()
+
 
     def _load_puzzle(self, puzzle_str: str):
         clean = puzzle_str.replace(" ", "")
@@ -24,7 +50,6 @@ class RushHourEngine:
                 self.cars[char]["length"] += 1
                 if self.cars[char]["direction"] is None:
                     self.cars[char]["direction"] = "H" if self.cars[char]["row"] == r else "V"
-        # Reject single-cell cars
         for cid, data in self.cars.items():
             if data["length"] == 1:
                 raise ValueError(f"Car '{cid}' has length 1, which is not allowed.")
@@ -50,9 +75,10 @@ class RushHourEngine:
         if "A" not in self.cars:
             return False
         car = self.cars["A"]
+        last = self.board_size - 1
         if car["direction"] == "H":
-            return (car["col"] + car["length"] - 1) == 5
-        return (car["row"] + car["length"] - 1) == 5
+            return (car["col"] + car["length"] - 1) == last
+        return (car["row"] + car["length"] - 1) == last
 
     def _move_single_step(self, car_id: str, step: int):
         car = self.cars[car_id]
@@ -112,4 +138,8 @@ class RushHourEngine:
             "is_won": self.is_won(),
             "status": "ok",
             "message": "OK",
+            "level": self.level_index,
+            "total_levels": len(LEVELS),
+            "level_name": LEVELS[self.level_index]["name"] if self.level_index >= 0 else "Custom",
+            "difficulty": LEVELS[self.level_index]["difficulty"] if self.level_index >= 0 else "custom",
         }

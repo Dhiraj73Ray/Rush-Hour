@@ -60,6 +60,22 @@
   letter-spacing: -0.02em;
 }
 
+.nav-btn:disabled {
+  opacity: 0.25;
+  cursor: not-allowed;
+}
+.nav-btn:disabled:hover {
+  background: transparent;
+  color: var(--muted);
+}
+
+.level-total {
+  color: var(--muted);
+  font-size: 0.7em;
+  font-weight: 700;
+  margin-left: 1px;
+}
+
 @media (max-width: 700px) {
   .level-nav { height: 30px; padding: 2px; gap: 1px; }
   .nav-btn { width: 24px; height: 24px; }

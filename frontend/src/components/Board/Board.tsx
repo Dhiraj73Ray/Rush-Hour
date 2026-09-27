@@ -118,6 +118,9 @@ export const Board: React.FC<BoardProps> = ({
   }, [gameState, previewCar, previewOffset]);
 
   const isDragging = previewCar !== null;
+  const size = displayBoard?.length ?? gameState?.size ?? 6;
+  const totalCells = size * size;
+  const isLoading = initialLoading || !displayBoard;
 
   return (
     <section className="game-stage">
@@ -127,7 +130,7 @@ export const Board: React.FC<BoardProps> = ({
           <h1>Find the way out.</h1>
         </div>
 
-        <div className="stage-badge stage-badge-size">6 × 6</div>
+        <div className="stage-badge stage-badge-size">{size} x {size}</div>
 
         <div className="stage-badge stage-badge-selected">
           <span className="badge-label">SELECTED</span>
@@ -141,8 +144,8 @@ export const Board: React.FC<BoardProps> = ({
 
       <div className="board-frame">
         <div id="board" className="game-board">
-          {initialLoading
-            ? Array.from({ length: 36 }).map((_, i) => (
+          {isLoading
+            ? Array.from({ length: totalCells }).map((_, i) => (
                 <div key={`load-${i}`} className="board-cell board-cell-loading" />
               ))
             : displayBoard?.map((row, ridx) =>

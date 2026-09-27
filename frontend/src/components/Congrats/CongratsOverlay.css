@@ -1,0 +1,156 @@
+/* Backdrop Overlay */
+.congrats-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 15, 26, 0.75);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+/* Modal Card */
+.congrats-card {
+  background: #1f1f2e;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 32px 40px;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+  max-width: 360px;
+  width: 90%;
+  animation: popIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+/* Animation Container for SVG & Text */
+.animation-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 220px;
+  height: 180px;
+  margin-bottom: 20px;
+}
+
+/* Spinning + Scaling Star */
+.star-wrapper {
+  animation: spinAndScale 1s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.star-svg {
+  width: 140px;
+  height: 140px;
+  filter: drop-shadow(0 0 16px rgba(92, 225, 230, 0.45));
+}
+
+/* CONGRATS! Text */
+.text-wrapper {
+  position: absolute;
+  bottom: 12px;
+  animation: textPop 0.8s 0.25s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.congrats-text {
+  font-size: 28px;
+  font-weight: 900;
+  color: #ffffff;
+  letter-spacing: 1.5px;
+  text-shadow: 
+    -2px -2px 0 #1f1f2e,
+     2px -2px 0 #1f1f2e,
+    -2px  2px 0 #1f1f2e,
+     2px  2px 0 #1f1f2e,
+     0 4px 10px rgba(0, 0, 0, 0.5);
+  margin: 0;
+}
+
+/* Action Buttons */
+.play-again-btn,
+.nextlvl-btn {
+  width: 100%;
+  padding: 12px 18px;
+  font-size: 15px;
+  font-weight: 700;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 10px;
+}
+
+.play-again-btn {
+  background: #5ce1e6;
+  color: #14141e;
+}
+
+.play-again-btn:hover {
+  background: #4ac7cc;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(92, 225, 230, 0.35);
+}
+
+.nextlvl-btn {
+  background: #2f2f45;
+  color: #e2e8f0;
+}
+
+.nextlvl-btn:hover {
+  background: #3c3c58;
+}
+
+.play-again-btn:active,
+.nextlvl-btn:active {
+  transform: scale(0.97);
+}
+
+/* Keyframes */
+@keyframes spinAndScale {
+  0% {
+    transform: scale(0) rotate(-180deg);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.15) rotate(15deg);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+@keyframes textPop {
+  0% {
+    transform: scale(0.4);
+    opacity: 0;
+  }
+  70% {
+    transform: scale(1.12);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes popIn {
+  from {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

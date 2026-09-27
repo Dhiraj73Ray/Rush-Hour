@@ -2,6 +2,7 @@ import "./App.css";
 import { useGameState } from "./hooks/useGameState";
 import { getCarColor, showSelectedCar } from "./utils/carHelpers";
 import { DPad } from "./components/DPad";
+import CongratsOverlay from "./components/Congrats/CongratsOverlay";
 
 function App() {
   const {
@@ -18,7 +19,6 @@ function App() {
     handleMoveRight,
     resetGame,
   } = useGameState();
-  
 
   return (
     <div className="container">
@@ -39,7 +39,6 @@ function App() {
             )
           ) : (gameState?.board.map((row, ridx) =>
             row.map((cell, cidx) => (
-              /* Look down here inside the className string to see how we did it! */
               <div
                 key={`${ridx}-${cidx}`}
                 onClick={() => handleCellClick(cell)}
@@ -71,6 +70,13 @@ function App() {
         <div></div>
         <button onClick={() => resetGame()}>Reset</button>
       </div>
+
+      {/* Renders when is_won is true. Resets and unmounts automatically when resetGame is called. */}
+      <CongratsOverlay 
+        isVisible={gameState?.is_won === true} 
+        onReset={resetGame} 
+      />
+      
     </div>
   );
 }

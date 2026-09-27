@@ -1,7 +1,11 @@
 import "./App.css";
 import { useGameState } from "./hooks/useGameState";
-import { getCarColor, showSelectedCar } from "./utils/carHelpers";
-import { DPad } from "./components/DPad";
+import { useTimer } from "./hooks/useTimer";
+import { TopBar } from "./components/Layout/TopBar";
+import { Footer } from "./components/Layout/Footer";
+import { InfoPanel } from "./components/HUD/InfoPanel";
+import { Board } from "./components/Board/Board";
+import { ControlsPanel } from "./components/Controls/ControlsPanel";
 import CongratsOverlay from "./components/Congrats/CongratsOverlay";
 import ConnectionErrorOverlay from "./components/ConnectionError/ConnectionErrorOverlay";
 
@@ -12,6 +16,7 @@ function App() {
     actionLoading,
     connectionError,
     selectedCar,
+    moves,
     handleCellClick,
     handleMouseEnter,
     handleMouseLeave,
@@ -24,46 +29,39 @@ function App() {
     retryConnection,
   } = useGameState();
 
+  const isRunning = moves > 0 && !gameState?.is_won && !connectionError;
+  const { seconds, reset: resetTimer } = useTimer(isRunning);
+
+  const handleReset = async () => {
+    resetTimer();
+    await resetGame();
+  };
+
   return (
-    <div className="container">
-      <h1>🚗 Rush Hour Engine</h1>
+    <div className="game-app">
+      <TopBar
+        level={4}
+        online={!connectionError}
+        onMenu={() => console.log("Menu — implement later")}
+        onPrevLevel={() => console.log("Prev level — implement later")}
+        onNextLevel={() => console.log("Next level — implement later")}
+        onOpenLevels={() => console.log("Open levels — implement later")}
+      />
 
-      <div className="game-container">
-        <div id="board" className="grid grid-cols-6 gap-1.5">
-          {initialLoading ? (
-            Array(6).fill(null).map((_, ridx) =>
-              Array(6).fill(null).map((_, cidx) => (
-                <div
-                  key={`loading-${ridx}-${cidx}`}
-                  className="flex items-center justify-center h-16 w-16 bg-gray-700 text-white text-xl font-bold rounded shadow opacity-40 animate-pulse"
-                >
-                  Offline
-                </div>
-              ))
-            )
-          ) : (
-            gameState?.board.map((row, ridx) =>
-              row.map((cell, cidx) => (
-                <div
-                  key={`${ridx}-${cidx}`}
-                  onClick={() => handleCellClick(cell)}
-                  onMouseEnter={() => handleMouseEnter(cell)}
-                  onMouseLeave={() => handleMouseLeave()}
-                  className={`flex items-center justify-center h-16 w-16 
-                ${getCarColor(cell)} 
-                ${cell === hoveredCar ? "brightness-125" : ""} 
-                ${showSelectedCar(cell, selectedCar, ridx, cidx, gameState.cars)}
-                ${gameState?.status === "blocked" && cell === selectedCar ? "animate-collide" : ""}
-                text-white text-3xl font-bold rounded shadow`}
-                >
-                  {cell !== "." && cell}
-                </div>
-              ))
-            )
-          )}
-        </div>
+      <main className="game-main">
+        <InfoPanel selectedCar={selectedCar} moves={moves} seconds={seconds} />
 
-        <DPad
+        <Board
+          gameState={gameState}
+          initialLoading={initialLoading}
+          selectedCar={selectedCar}
+          hoveredCar={hoveredCar}
+          onCellClick={handleCellClick}
+          onCellEnter={handleMouseEnter}
+          onCellLeave={handleMouseLeave}
+        />
+
+        <ControlsPanel
           selectedCar={selectedCar}
           loading={actionLoading}
           gameState={gameState}
@@ -71,15 +69,15 @@ function App() {
           onDown={handleMoveDown}
           onLeft={handleMoveLeft}
           onRight={handleMoveRight}
+          onReset={handleReset}
         />
+      </main>
 
-        <div></div>
-        <button onClick={() => resetGame()}>Reset</button>
-      </div>
+      <Footer level={4} status={gameState?.is_won ? "SOLVED" : "READY"} />
 
       <CongratsOverlay
         isVisible={gameState?.is_won === true}
-        onReset={resetGame}
+        onReset={handleReset}
       />
 
       <ConnectionErrorOverlay

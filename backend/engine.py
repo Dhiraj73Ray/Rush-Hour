@@ -1,49 +1,77 @@
 from levels import LEVELS
 class RushHourEngine:
-    def __init__(self, puzzle_string: str = None, level_index: int = 0):
+    def __init__(self, puzzle_string: str = None, level_index: int = 0, exit_side: str = "bottom", exit_position: int = 1):
         if puzzle_string is None and (LEVELS and len(LEVELS) > 0):
             puzzle_string = LEVELS[level_index]["puzzle"]
         elif puzzle_string is None:
             puzzle_string = ".A.... .A.... .A.... .BBBC. ....C. ....C."
             level_index = -1
             
-        self.puzzle_string = puzzle_string
         self.level_index = level_index
-        self.board_size = 6
-        self.board = [["." for _ in range(6)] for _ in range(6)]
+        self.exit_side = exit_side
+        self.exit_position = exit_position
         self.cars = {}
-        self.reset()
+        
+        # Route initialization through reset to ensure size is detected immediately
+        self.reset(puzzle_string)
+        self._validate_puzzle()
 
+    def _detect_size(self, puzzle_str: str) -> int:
+        clean = puzzle_str.replace(" ", "")
+        total = len(clean)
+        size = int(round(total ** 0.5))
+        if size * size != total:
+            raise ValueError(f"Puzzle has {total} cells, not a perfect square")
+        return size
+    
     def load_level(self, index: int):
         if index < 0 or index >= len(LEVELS):
             raise ValueError(f"Level {index} does not exist")
         self.level_index = index
-        self.puzzle_string = LEVELS[index]["puzzle"]
-        self.cars.clear()
-        self._load_puzzle(self.puzzle_string)
-        self._render()
+        self.reset(LEVELS[index]["puzzle"])
 
-    def reset(self, new_puzzle: str = ".A.... .A.... .A.... .BBBC. ....C. ....C."):
-        if self.level_index >= 0:
+    def reset(self, new_puzzle: str = None):
+        # 1. Resolve which puzzle string to use
+        if new_puzzle:
+            self.puzzle_string = new_puzzle
+            # Only reset level_index to -1 if we aren't internally reloading the current level
+            if self.level_index >= 0 and LEVELS and self.puzzle_string != LEVELS[self.level_index]["puzzle"]:
+                self.level_index = -1
+        elif self.level_index >= 0 and LEVELS:
             self.puzzle_string = LEVELS[self.level_index]["puzzle"]
-        elif new_puzzle and new_puzzle != ".A.... .A.... .A.... .BBBC. ....C. ....C.":
-            self.puzzle_string = new_puzzle
-            self.level_index = -1
         else:
-            self.puzzle_string = new_puzzle
-            self.level_index = -1
+            self.puzzle_string = ".A.... .A.... .A.... .BBBC. ....C. ....C."
 
+        # 2. FIX: Detect new size and rebuild the empty board FIRST
+        self.board_size = self._detect_size(self.puzzle_string)
+        self.board = [["." for _ in range(self.board_size)] for _ in range(self.board_size)]
+
+        # 3. NOW load cars using the correct board_size
         self.cars.clear()
         self._load_puzzle(self.puzzle_string)
         self._render()
 
+    def _validate_puzzle(self):
+        if "A" not in self.cars:
+            raise ValueError("Puzzle must contain a car labeled 'A'")
+        a = self.cars["A"]
+        if a["direction"] not in ("H", "V"):
+            raise ValueError("Car 'A' must be at least 2 cells long")
+        if self.is_won():
+            raise ValueError("Puzzle is already solved (A is at the exit)")
+        for cid, data in self.cars.items():
+            if data["length"] < 2:
+                raise ValueError(f"Car '{cid}' has length 1 (min 2)")
+            if data["direction"] is None:
+                raise ValueError(f"Car '{cid}' has no direction")
 
     def _load_puzzle(self, puzzle_str: str):
         clean = puzzle_str.replace(" ", "")
+        n = self.board_size
         for idx, char in enumerate(clean):
             if char == ".":
                 continue
-            r, c = idx // 6, idx % 6
+            r, c = idx // n, idx % n
             if char not in self.cars:
                 self.cars[char] = {"row": r, "col": c, "length": 1, "direction": None}
             else:
@@ -55,8 +83,9 @@ class RushHourEngine:
                 raise ValueError(f"Car '{cid}' has length 1, which is not allowed.")
 
     def _clear_board(self):
-        for r in range(6):
-            for c in range(6):
+        n = self.board_size
+        for r in range(n):
+            for c in range(n):
                 self.board[r][c] = "."
 
     def _draw_car(self, letter, start_r, start_c, length, direction):
@@ -83,10 +112,11 @@ class RushHourEngine:
     def _move_single_step(self, car_id: str, step: int):
         car = self.cars[car_id]
         d = car["direction"]
+        last = self.board_size - 1
 
         if d == "H":
             new_col = car["col"] + step
-            if not (0 <= new_col and (new_col + car["length"] - 1) <= 5):
+            if not (0 <= new_col and (new_col + car["length"] - 1) <= last):
                 return "wall"
             check_col = (car["col"] + car["length"]) if step > 0 else (car["col"] - 1)
             if self.board[car["row"]][check_col] != ".":
@@ -96,7 +126,7 @@ class RushHourEngine:
 
         elif d == "V":
             new_row = car["row"] + step
-            if not (0 <= new_row and (new_row + car["length"] - 1) <= 5):
+            if not (0 <= new_row and (new_row + car["length"] - 1) <= last):
                 return "wall"
             check_row = (car["row"] + car["length"]) if step > 0 else (car["row"] - 1)
             if self.board[check_row][car["col"]] != ".":
@@ -138,6 +168,7 @@ class RushHourEngine:
             "is_won": self.is_won(),
             "status": "ok",
             "message": "OK",
+            "size": self.board_size,
             "level": self.level_index,
             "total_levels": len(LEVELS),
             "level_name": LEVELS[self.level_index]["name"] if self.level_index >= 0 else "Custom",

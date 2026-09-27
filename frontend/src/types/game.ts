@@ -1,9 +1,13 @@
+export type ExitSide = "right" | "left" | "top" | "bottom";
+
 export interface GameState {
     board: string[][];
     is_won: boolean;
     cars: Record<string, CarData>;
     status?: string;
     message?: string;
+    exit_side: ExitSide;
+    exit_position: number;
     size: number;
     level: number;
     total_levels: number;

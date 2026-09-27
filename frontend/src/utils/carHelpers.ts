@@ -6,11 +6,25 @@ const TAILWIND_PALETTE = [
   "bg-indigo-500", "bg-teal-500", "bg-orange-500"
 ];
 
+const CAR_PALETTE = [
+  "bg-[#3d5a80]", // deep blue
+  "bg-[#2a9d8f]", // teal
+  "bg-[#e9c46a]", // golden
+  "bg-[#f4a261]", // orange
+  "bg-[#a06cd5]", // purple
+  "bg-[#8ecae6]", // sky
+  "bg-[#84a98c]", // sage
+  "bg-[#ff8fab]", // pink
+  "bg-[#c9ada7]", // taupe
+];
+
 export const getCarColor = (cellValue: string): string => {
   if (!cellValue || cellValue === ".") return "bg-gray-200";
-  
-  const index = cellValue.charCodeAt(0) % TAILWIND_PALETTE.length;
-  return TAILWIND_PALETTE[index];
+  if (cellValue === "A") return "bg-[#e63946]"; // A is always the red car
+
+  // B, C, D, ... → 0, 1, 2, ...
+  const index = (cellValue.charCodeAt(0) - 66) % CAR_PALETTE.length;
+  return CAR_PALETTE[index < 0 ? index + CAR_PALETTE.length : index];
 };
 
 export const showSelectedCar = (

@@ -98,8 +98,6 @@ export const Board: React.FC<BoardProps> = ({
 
     if (previewOffset !== 0) {
       onMove(drag.car, previewOffset);
-      // Keep preview visible until server responds —
-      // it'll be cleared by the useEffect above.
     } else {
       setPreviewCar(null);
       setPreviewOffset(0);
@@ -143,7 +141,11 @@ export const Board: React.FC<BoardProps> = ({
       </div>
 
       <div className="board-frame">
-        <div id="board" className="game-board">
+        <div
+          id="board"
+          className="game-board"
+          style={{ "--grid-size": size } as React.CSSProperties}
+        >
           {isLoading
             ? Array.from({ length: totalCells }).map((_, i) => (
                 <div key={`load-${i}`} className="board-cell board-cell-loading" />

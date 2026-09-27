@@ -9,6 +9,7 @@ export const useGameState = () => {
   const [actionLoading, setActionLoading] = useState(false);
   const [connectionError, setConnectionError] = useState(false);
   const [hoveredCar, setHoveredCar] = useState<string | null>(null);
+  const [moves, setMoves] = useState(0);
 
   const loadInitialState = useCallback(async () => {
     setInitialLoading(true);
@@ -27,19 +28,17 @@ export const useGameState = () => {
     loadInitialState();
   }, [loadInitialState]);
 
-  // Auto-retry every 5 seconds while connection is lost
+  // Auto-retry every 5s while connection is down
   useEffect(() => {
     if (!connectionError) return;
-    const interval = setInterval(() => {
-      loadInitialState();
-    }, 5000);
-    return () => clearInterval(interval);
+    const id = setInterval(loadInitialState, 5000);
+    return () => clearInterval(id);
   }, [connectionError, loadInitialState]);
 
   const handleCellClick = (car: string) => {
     if (car !== "." && car !== selectedCar) {
       setSelectedCar(car);
-      setGameState(prev => prev ? { ...prev, message: "", status: "ok" } : null);
+      setGameState((prev) => (prev ? { ...prev, message: "", status: "ok" } : null));
     }
   };
 
@@ -53,10 +52,11 @@ export const useGameState = () => {
   const sendMove = async (carId: string, move: number) => {
     if (!carId) return;
     setActionLoading(true);
-    setGameState(prev => prev ? { ...prev, message: "", status: "ok" } : null);
+    setGameState((prev) => (prev ? { ...prev, message: "", status: "ok" } : null));
     try {
       const data = await postMoveCar({ car_id: carId, steps: move });
       setGameState(data);
+      if (data.status === "ok") setMoves((m) => m + 1);
       setConnectionError(false);
     } catch {
       setConnectionError(true);
@@ -76,6 +76,7 @@ export const useGameState = () => {
       const data = await postResetGame();
       setGameState(data);
       setSelectedCar("");
+      setMoves(0);
       setConnectionError(false);
     } catch {
       setConnectionError(true);
@@ -84,9 +85,7 @@ export const useGameState = () => {
     }
   };
 
-  const retryConnection = () => {
-    loadInitialState();
-  };
+  const retryConnection = () => loadInitialState();
 
   return {
     gameState,
@@ -94,6 +93,7 @@ export const useGameState = () => {
     actionLoading,
     connectionError,
     selectedCar,
+    moves,
     handleCellClick,
     handleMouseEnter,
     handleMouseLeave,

@@ -1,0 +1,62 @@
+.level-nav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.nav-btn {
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.nav-btn:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text);
+}
+.nav-btn:active { transform: scale(0.9); }
+
+.level-display {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.level-display:hover { background: rgba(255, 255, 255, 0.04); }
+
+.level-label {
+  color: var(--muted);
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+}
+.level-number {
+  color: var(--accent-2);
+  font-size: 18px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+@media (max-width: 700px) {
+  .level-nav { padding: 2px; gap: 2px; }
+  .level-label { display: none; }
+  .level-number { font-size: 15px; }
+  .nav-btn { width: 24px; height: 24px; }
+  .level-display { padding: 4px 6px; }
+}

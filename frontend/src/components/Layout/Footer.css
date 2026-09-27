@@ -1,0 +1,19 @@
+.game-footer {
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+  gap: 7px;
+  padding-top: 8px;
+  color: #536079;
+  font-size: 7px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+}
+
+@media (prefers-color-scheme: light) {
+  .game-footer { color: #7c879b; }
+}
+
+@media (max-width: 700px) {
+  .game-footer { display: none; }
+}

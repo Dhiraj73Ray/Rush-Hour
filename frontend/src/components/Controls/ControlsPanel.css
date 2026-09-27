@@ -1,0 +1,159 @@
+.controls-panel {
+  width: 210px;
+  padding: 18px 15px;
+  border-radius: 17px;
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.045),
+    rgba(255, 255, 255, 0.015)
+  );
+  border: 1px solid var(--border);
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.2),
+    inset 0 1px rgba(255, 255, 255, 0.035);
+}
+
+.controls-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  margin-bottom: 17px;
+}
+
+.controller-symbol {
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  background: rgba(139, 124, 255, 0.1);
+  color: var(--accent);
+  font-size: 16px;
+}
+.controls-title strong { display: block; font-size: 11px; }
+.controls-title span:not(.controller-symbol) {
+  display: block;
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: 6px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+/* D-Pad grid */
+.dpad-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: 6px;
+  width: fit-content;
+  margin: 0 auto;
+}
+.dpad-cell { display: flex; justify-content: center; }
+.dpad-up    { grid-column: 2; grid-row: 1; }
+.dpad-left  { grid-column: 1; grid-row: 2; }
+.dpad-right { grid-column: 3; grid-row: 2; }
+.dpad-down  { grid-column: 2; grid-row: 3; }
+
+.dpad-grid button {
+  width: 47px;
+  height: 47px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  background: linear-gradient(145deg, #1b263b, #11192a);
+  color: #e5ebf8;
+  cursor: pointer;
+  transition: filter 0.15s ease, transform 0.1s ease;
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.3),
+    inset 0 1px rgba(255, 255, 255, 0.07);
+}
+.dpad-grid button:hover:not(:disabled) { filter: brightness(1.15); }
+.dpad-grid button:active:not(:disabled) { transform: scale(0.9); }
+.dpad-grid button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  filter: grayscale(0.3);
+}
+.dpad-grid button svg { width: 21px; height: 21px; }
+
+/* Keyboard hint */
+.keyboard-hint {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  margin-top: 15px;
+  padding-top: 11px;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+}
+.keyboard-hint span {
+  width: 15px;
+  height: 15px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  font-size: 7px;
+}
+.keyboard-hint small { margin-left: 5px; font-size: 7px; }
+
+/* Reset */
+.reset-btn {
+  width: 100%;
+  margin-top: 12px;
+  padding: 9px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: rgba(139, 124, 255, 0.1);
+  color: var(--text);
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 0.15em;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.reset-btn:hover { background: rgba(139, 124, 255, 0.18); }
+.reset-btn:active { transform: scale(0.97); }
+
+/* Light mode */
+@media (prefers-color-scheme: light) {
+  .controls-panel {
+    background: linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.3),
+      rgba(255, 255, 255, 0.08)
+    );
+    box-shadow: 0 18px 35px rgba(55, 65, 90, 0.12),
+      inset 0 1px rgba(255, 255, 255, 0.45);
+  }
+  .dpad-grid button {
+    background: linear-gradient(145deg, #eef1f6, #d7deea);
+    color: #39445a;
+    box-shadow: 0 5px 12px rgba(55, 65, 90, 0.16),
+      inset 0 1px rgba(255, 255, 255, 0.7);
+  }
+}
+
+/* Mobile */
+@media (max-width: 700px) {
+  .controls-panel {
+    width: 100%;
+    max-width: 260px;
+    margin: 0 auto;
+    padding: 11px;
+    border-radius: 14px;
+  }
+  .controls-title { margin-bottom: 9px; }
+  .dpad-grid button { width: 43px; height: 43px; }
+  .dpad-grid button svg { width: 19px; height: 19px; }
+  .keyboard-hint { margin-top: 8px; padding-top: 7px; }
+}
+
+@media (max-width: 380px) {
+  .controls-title { display: none; }
+  .keyboard-hint { display: none; }
+  .dpad-grid button { width: 39px; height: 39px; }
+}

@@ -1,0 +1,124 @@
+.info-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.info-card,
+.stat-card,
+.selected-card {
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.045),
+    rgba(255, 255, 255, 0.015)
+  );
+  border: 1px solid var(--border);
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.2),
+    inset 0 1px rgba(255, 255, 255, 0.035);
+}
+
+.info-card {
+  padding: 17px;
+  border-radius: 15px;
+}
+
+.card-label,
+.stat-label {
+  color: var(--muted);
+  font-size: 7px;
+  font-weight: 900;
+  letter-spacing: 0.18em;
+}
+
+.objective-icon {
+  margin-top: 12px;
+  font-size: 22px;
+}
+.objective-card h2 { margin-top: 7px; font-size: 14px; }
+.objective-card p {
+  margin-top: 5px;
+  color: var(--muted);
+  font-size: 9px;
+  line-height: 1.5;
+}
+
+.stats-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 9px;
+}
+
+.stat-card { padding: 12px; border-radius: 12px; }
+.stat-card strong {
+  display: block;
+  margin-top: 5px;
+  font-size: 18px;
+}
+
+.selected-card { padding: 13px; border-radius: 12px; }
+
+.selected-car-display {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: 9px;
+}
+.selected-car-letter {
+  width: 27px;
+  height: 27px;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  background: var(--accent);
+  color: white;
+  font-weight: 900;
+}
+
+/* Light mode */
+@media (prefers-color-scheme: light) {
+  .info-card,
+  .stat-card,
+  .selected-card {
+    background: linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.3),
+      rgba(255, 255, 255, 0.08)
+    );
+    box-shadow: 0 18px 35px rgba(55, 65, 90, 0.12),
+      inset 0 1px rgba(255, 255, 255, 0.45);
+  }
+}
+
+/* Tablet: info becomes a horizontal row */
+@media (max-width: 1000px) {
+  .info-panel {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  .info-panel > * {
+    flex: 1 1 180px;
+  }
+  .objective-card p { display: none; }
+  .objective-icon { margin-top: 6px; font-size: 18px; }
+}
+
+/* Mobile: compact horizontal row, wraps */
+@media (max-width: 700px) {
+  .info-panel { gap: 6px; }
+  .info-panel > * {
+    flex: 1 1 100px;
+    min-width: 0;
+  }
+  .info-card,
+  .stat-card,
+  .selected-card {
+    padding: 10px;
+    border-radius: 10px;
+  }
+  .stat-card strong { font-size: 15px; }
+  .objective-card h2 { font-size: 12px; }
+  .selected-car-letter { width: 22px; height: 22px; font-size: 12px; }
+  .selected-car-display { font-size: 8px; }
+}

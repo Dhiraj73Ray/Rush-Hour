@@ -1,35 +1,60 @@
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: #14141e;
-  color: #f1f2f6;
+.game-app {
+  width: 100%;
+  height: 100vh;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 45%, rgba(86, 217, 255, 0.045), transparent 35%),
+    radial-gradient(circle at 15% 20%, rgba(139, 124, 255, 0.07), transparent 30%),
+    var(--bg);
+  padding: 18px clamp(16px, 4vw, 52px);
+}
+
+.game-main {
+  width: min(1250px, 100%);
+  min-height: 0;
+  flex: 1;
+  margin: auto;
+  display: grid;
+  grid-template-columns: 210px minmax(380px, 560px) 210px;
   justify-content: center;
-  min-height: 100vh;
-}
-
-.game-container{
-  display: flex;
-  justify-content: center;
   align-items: center;
-  gap: 20px;
+  gap: clamp(25px, 4vw, 65px);
 }
 
-@keyframes shake {
-  0%, 100% { transform: translateX(0) translateY(0); }
-  25% { transform: translateX(-4px) translateY(-4px); }
-  75% { transform: translateX(4px) translateY(4px); }
+/* TABLET: info on top, board + controls below */
+@media (max-width: 1000px) {
+  .game-main {
+    grid-template-columns: minmax(0, 1fr) 210px;
+    grid-template-areas:
+      "info info"
+      "stage controls";
+    align-items: start;
+    gap: 18px;
+  }
+  .info-panel   { grid-area: info; }
+  .game-stage   { grid-area: stage; }
+  .controls-panel { grid-area: controls; }
 }
 
-.animate-collide {
-  animation: shake 0.3s ease-in-out;
-  background-color: #ef4444 !important; /* Tailwind red-500 override */
-  filter: brightness(1.5);
+/* MOBILE: everything stacks */
+@media (max-width: 700px) {
+  .game-app { padding: 12px 10px; }
+  .game-main {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    padding: 10px 0;
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  .game-app {
+    background:
+      radial-gradient(circle at 50% 45%, rgba(116, 100, 217, 0.09), transparent 38%),
+      radial-gradient(circle at 10% 15%, rgba(60, 145, 178, 0.08), transparent 30%),
+      var(--bg);
+  }
 }

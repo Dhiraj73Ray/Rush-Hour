@@ -32,7 +32,6 @@
   font-weight: 800;
 }
 
-/* Selected-car badge (mobile only by default) */
 .stage-badge-selected {
   display: none;
   align-items: center;
@@ -54,13 +53,15 @@
   color: #fff;
   font-size: 12px;
   font-weight: 900;
-  background: var(--accent); /* fallback for "—" */
+  background: var(--accent);
   box-shadow: inset 0 1px rgba(255, 255, 255, 0.2),
     inset 0 -2px 4px rgba(0, 0, 0, 0.15);
 }
-.badge-car[class*="bg-"] { background: unset; } /* let Tailwind win when colored */
+.badge-car[class*="bg-"] {
+  background: unset;
+}
 
-/* Board */
+/* Board frame */
 .board-frame {
   position: relative;
   width: 100%;
@@ -75,18 +76,16 @@
 .game-board {
   width: 100%;
   display: grid;
-  /* Dynamically uses CSS variable --grid-size, defaults to 6 */
   grid-template-columns: repeat(var(--grid-size, 6), 1fr);
   gap: 5px;
   padding: 5px;
   border-radius: 13px;
   background: #090e19;
-
-  /* Disable native scroll/zoom on the board so swipes reach us */
   touch-action: none;
   user-select: none;
   -webkit-user-select: none;
   -webkit-touch-callout: none;
+  -webkit-user-drag: none;
 }
 
 .board-cell {
@@ -109,7 +108,9 @@
   filter: brightness(1.12);
   z-index: 2;
 }
-.board-cell:active { transform: scale(0.96); }
+.board-cell:active {
+  transform: scale(0.96);
+}
 
 .board-cell-loading {
   background: rgba(255, 255, 255, 0.05);
@@ -127,6 +128,64 @@
   z-index: 3;
 }
 
+.board-cell.cell-dragging {
+  cursor: grabbing;
+  z-index: 5;
+  filter: brightness(1.18);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.65),
+    0 10px 22px rgba(0, 0, 0, 0.45),
+    inset 0 1px rgba(255, 255, 255, 0.2),
+    inset 0 -4px 7px rgba(0, 0, 0, 0.15);
+  transform: scale(1.02);
+}
+
+/* ============ EXIT MARKER ============ */
+
+/* Layer that sits exactly over the board area (inside the frame padding). */
+.exit-layer {
+  position: absolute;
+  inset: 9px;
+  pointer-events: none;
+  z-index: 6;
+}
+
+.exit-marker {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  color: var(--accent-2);
+  filter: drop-shadow(0 0 8px rgba(86, 217, 255, 0.6));
+  animation: exitPulse 1.6s ease-in-out infinite;
+}
+.exit-marker svg {
+  width: 100%;
+  height: 100%;
+}
+
+.exit-right {
+  right: -20px;
+  transform: translateY(-50%);
+}
+.exit-left {
+  left: -20px;
+  transform: translateY(-50%);
+}
+.exit-top {
+  top: -20px;
+  transform: translateX(-50%);
+}
+.exit-bottom {
+  bottom: -20px;
+  transform: translateX(-50%);
+}
+
+@keyframes exitPulse {
+  0%, 100% { opacity: 0.7; }
+  50%      { opacity: 1; }
+}
+
 /* Light mode */
 @media (prefers-color-scheme: light) {
   .board-frame {
@@ -134,11 +193,15 @@
     border-color: rgba(55, 65, 90, 0.15);
     box-shadow: 0 20px 45px rgba(55, 65, 90, 0.18);
   }
-  .game-board { background: #c2cad8; }
-  .board-cell-loading { background: rgba(0, 0, 0, 0.05); }
+  .game-board {
+    background: #c2cad8;
+  }
+  .board-cell-loading {
+    background: rgba(0, 0, 0, 0.05);
+  }
 }
 
-/* Tablet: tighten spacing, smaller cells */
+/* Tablet */
 @media (max-width: 1000px) and (min-width: 701px) {
   .stage-top { margin-bottom: 8px; }
   .stage-top h1 { font-size: 15px; margin-top: 2px; }
@@ -164,6 +227,7 @@
   }
 }
 
+
 /* Mobile */
 @media (max-width: 700px) {
   .stage-top { margin-bottom: 6px; }
@@ -179,4 +243,11 @@
     border-radius: 5px;
     font-size: clamp(13px, 5vw, 19px);
   }
+
+  .exit-layer { inset: 5px; }
+  .exit-marker { width: 16px; height: 16px; }
+  .exit-right  { right: -13px; }
+  .exit-left   { left: -13px; }
+  .exit-top    { top: -13px; }
+  .exit-bottom { bottom: -13px; }
 }

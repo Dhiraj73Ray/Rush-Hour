@@ -45,7 +45,6 @@ export const Board: React.FC<BoardProps> = ({
   const [previewOffset, setPreviewOffset] = useState(0);
   const dragRef = useRef<DragState | null>(null);
 
-  // Clear preview once the server responds with new board data
   useEffect(() => {
     setPreviewCar(null);
     setPreviewOffset(0);
@@ -120,6 +119,16 @@ export const Board: React.FC<BoardProps> = ({
   const totalCells = size * size;
   const isLoading = initialLoading || !displayBoard;
 
+  // Exit marker geometry
+  const exitSide = gameState?.exit_side ?? "bottom";
+  const exitPos = gameState?.exit_position ?? 0;
+  const offsetPercent = ((exitPos + 0.5) / size) * 100;
+
+  const exitPositionStyle: React.CSSProperties =
+    exitSide === "right" || exitSide === "left"
+      ? { top: `${offsetPercent}%` }
+      : { left: `${offsetPercent}%` };
+
   return (
     <section className="game-stage">
       <div className="stage-top">
@@ -128,7 +137,9 @@ export const Board: React.FC<BoardProps> = ({
           <h1>Find the way out.</h1>
         </div>
 
-        <div className="stage-badge stage-badge-size">{size} x {size}</div>
+        <div className="stage-badge stage-badge-size">
+          {size} × {size}
+        </div>
 
         <div className="stage-badge stage-badge-selected">
           <span className="badge-label">SELECTED</span>
@@ -183,6 +194,31 @@ export const Board: React.FC<BoardProps> = ({
                 ))
               )}
         </div>
+
+        {/* Exit marker — layered over the frame so its % matches board area */}
+        {!isLoading && (
+          <div className="exit-layer">
+            <div
+              className={`exit-marker exit-${exitSide}`}
+              style={exitPositionStyle}
+              aria-hidden
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.4"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                {exitSide === "right" && <path d="M5 12h14M13 6l6 6-6 6" />}
+                {exitSide === "left" && <path d="M19 12H5M11 6l-6 6 6 6" />}
+                {exitSide === "bottom" && <path d="M12 5v14M6 13l6 6 6-6" />}
+                {exitSide === "top" && <path d="M12 19V5M6 11l6-6 6 6" />}
+              </svg>
+            </div>
+          </div>
+        )}
       </div>
     </section>
   );

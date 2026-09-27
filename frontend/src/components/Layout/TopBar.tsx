@@ -1,4 +1,5 @@
 import { LevelNav } from "../Navigation/LevelNav";
+// import { type ExitSide } from "../../types/game";
 import "./TopBar.css";
 
 interface TopBarProps {
@@ -7,11 +8,19 @@ interface TopBarProps {
   online: boolean;
   canPrev: boolean;
   canNext: boolean;
+  // exitSide: ExitSide;
   onMenu: () => void;
   onPrevLevel: () => void;
   onNextLevel: () => void;
   onOpenLevels: () => void;
 }
+
+// const EXIT_ARROW: Record<ExitSide, string> = {
+//   right: "→",
+//   left: "←",
+//   top: "↑",
+//   bottom: "↓",
+// };
 
 export const TopBar: React.FC<TopBarProps> = ({
   level,
@@ -28,8 +37,15 @@ export const TopBar: React.FC<TopBarProps> = ({
     <header className="topbar">
       <div className="topbar-left">
         <button className="icon-btn" onClick={onMenu} aria-label="Main menu">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
-               stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+          >
             <line x1="3" y1="6" x2="21" y2="6" />
             <line x1="3" y1="12" x2="21" y2="12" />
             <line x1="3" y1="18" x2="21" y2="18" />
@@ -56,9 +72,6 @@ export const TopBar: React.FC<TopBarProps> = ({
       />
 
       <div className="topbar-right">
-        <div className="exit-indicator exit-in-topbar">
-          EXIT<span>→</span>
-        </div>
         <div className={`online-status ${online ? "" : "offline"}`}>
           <span className="online-dot" />
           {online ? "ONLINE" : "OFFLINE"}

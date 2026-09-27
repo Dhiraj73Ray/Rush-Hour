@@ -20,4 +20,11 @@ LEVELS = [
          "exit_side": "right",
          "exit_position": 2,
      },
+    {
+         "name": "Little Hard",
+         "difficulty": "hard",
+         "puzzle": "DDDH.. ..EHKK AAE..C G.EFFC GBBBJC IILLJ.",
+         "exit_side": "right",
+         "exit_position": 2,
+     },
 ]

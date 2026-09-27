@@ -1,16 +1,18 @@
 .level-nav {
   display: flex;
   align-items: center;
-  gap: 4px;
-  padding: 4px;
+  justify-content: center;
+  gap: 2px;
+  padding: 3px;
   border-radius: 12px;
   border: 1px solid var(--border);
   background: rgba(255, 255, 255, 0.02);
+  height: 38px; /* uniform height for all children */
 }
 
 .nav-btn {
-  width: 28px;
-  height: 28px;
+  width: 30px;
+  height: 30px;
   display: grid;
   place-items: center;
   border-radius: 8px;
@@ -19,18 +21,21 @@
   color: var(--muted);
   cursor: pointer;
   transition: all 0.15s ease;
+  flex-shrink: 0;
 }
 .nav-btn:hover {
   background: rgba(255, 255, 255, 0.06);
   color: var(--text);
 }
-.nav-btn:active { transform: scale(0.9); }
+.nav-btn:active { transform: scale(0.92); }
+.nav-btn svg { width: 12px; height: 12px; }
 
 .level-display {
   display: flex;
-  align-items: baseline;
+  align-items: center;      /* was baseline — this is the alignment fix */
   gap: 6px;
-  padding: 4px 10px;
+  height: 30px;
+  padding: 0 12px;
   border-radius: 8px;
   border: none;
   background: transparent;
@@ -42,21 +47,24 @@
 
 .level-label {
   color: var(--muted);
-  font-size: 8px;
+  font-size: 9px;           /* was 8px — slightly larger for balance */
   font-weight: 800;
-  letter-spacing: 0.15em;
+  letter-spacing: 0.14em;
+  line-height: 1;
 }
 .level-number {
   color: var(--accent-2);
-  font-size: 18px;
+  font-size: 16px;          /* was 18px — smaller for balance */
   font-weight: 900;
   line-height: 1;
+  letter-spacing: -0.02em;
 }
 
 @media (max-width: 700px) {
-  .level-nav { padding: 2px; gap: 2px; }
-  .level-label { display: none; }
-  .level-number { font-size: 15px; }
+  .level-nav { height: 30px; padding: 2px; gap: 1px; }
   .nav-btn { width: 24px; height: 24px; }
-  .level-display { padding: 4px 6px; }
+  .nav-btn svg { width: 10px; height: 10px; }
+  .level-display { height: 24px; padding: 0 8px; gap: 4px; }
+  .level-label { font-size: 8px; }
+  .level-number { font-size: 13px; }
 }

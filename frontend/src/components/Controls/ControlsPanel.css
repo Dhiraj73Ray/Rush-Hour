@@ -137,23 +137,67 @@
   }
 }
 
-/* Mobile */
+/* Tablet: narrower, compact */
+@media (max-width: 1000px) and (min-width: 701px) {
+  .controls-panel {
+    margin-top: 100px;
+    margin-left: -60px;
+    width: 250px;
+    padding: 14px 12px;
+    border-radius: 15px;
+  }
+
+  .controls-title {
+    gap: 7px;
+    margin-bottom: 12px;
+  }
+  .controller-symbol {
+    width: 26px;
+    height: 26px;
+    font-size: 14px;
+  }
+  .controls-title strong { font-size: 10px; }
+  .controls-title span:not(.controller-symbol) { font-size: 5px; }
+
+  .dpad-grid { gap: 5px; }
+  .dpad-grid button { width: 42px; height: 42px; border-radius: 10px; }
+  .dpad-grid button svg { width: 18px; height: 18px; }
+
+  .keyboard-hint {
+    margin-top: 12px;
+    padding-top: 9px;
+  }
+  .keyboard-hint span { width: 13px; height: 13px; font-size: 6px; }
+  .keyboard-hint small { font-size: 6px; }
+
+  .reset-btn {
+    margin-top: 10px;
+    padding: 8px 10px;
+    font-size: 8px;
+    letter-spacing: 0.12em;
+  }
+}
+
+/* Mobile: only the RESET button, as a thin bar */
 @media (max-width: 700px) {
   .controls-panel {
     width: 100%;
-    max-width: 260px;
-    margin: 0 auto;
-    padding: 11px;
-    border-radius: 14px;
+    padding: 6px;
+    border-radius: 10px;
+    background: transparent;
+    border: none;
+    box-shadow: none;
   }
-  .controls-title { margin-bottom: 9px; }
-  .dpad-grid button { width: 43px; height: 43px; }
-  .dpad-grid button svg { width: 19px; height: 19px; }
-  .keyboard-hint { margin-top: 8px; padding-top: 7px; }
-}
-
-@media (max-width: 380px) {
-  .controls-title { display: none; }
-  .keyboard-hint { display: none; }
-  .dpad-grid button { width: 39px; height: 39px; }
+  .controls-title,
+  .dpad-grid,
+  .keyboard-hint {
+    display: none;
+  }
+  .reset-btn {
+    margin-top: 0;
+    padding: 9px 12px;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    background: rgba(139, 124, 255, 0.12);
+  }
 }

@@ -17,10 +17,7 @@
     inset 0 1px rgba(255, 255, 255, 0.035);
 }
 
-.info-card {
-  padding: 17px;
-  border-radius: 15px;
-}
+.info-card { padding: 17px; border-radius: 15px; }
 
 .card-label,
 .stat-label {
@@ -30,10 +27,7 @@
   letter-spacing: 0.18em;
 }
 
-.objective-icon {
-  margin-top: 12px;
-  font-size: 22px;
-}
+.objective-icon { margin-top: 12px; font-size: 22px; }
 .objective-card h2 { margin-top: 7px; font-size: 14px; }
 .objective-card p {
   margin-top: 5px;
@@ -71,9 +65,13 @@
   display: grid;
   place-items: center;
   border-radius: 8px;
-  background: var(--accent);
   color: white;
   font-weight: 900;
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.2),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.15);
+}
+.selected-car-letter:not([class*="bg-"]) {
+  background: var(--accent);
 }
 
 /* Light mode */
@@ -91,34 +89,79 @@
   }
 }
 
-/* Tablet: info becomes a horizontal row */
-@media (max-width: 1000px) {
+/* Tablet: compact horizontal row */
+@media (max-width: 1000px) and (min-width: 701px) {
   .info-panel {
     flex-direction: row;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
+    gap: 8px;
+    align-items: stretch;
   }
   .info-panel > * {
-    flex: 1 1 180px;
-  }
-  .objective-card p { display: none; }
-  .objective-icon { margin-top: 6px; font-size: 18px; }
-}
-
-/* Mobile: compact horizontal row, wraps */
-@media (max-width: 700px) {
-  .info-panel { gap: 6px; }
-  .info-panel > * {
-    flex: 1 1 100px;
+    flex: 1 1 0;
     min-width: 0;
   }
+
   .info-card,
   .stat-card,
   .selected-card {
-    padding: 10px;
-    border-radius: 10px;
+    padding: 10px 12px;
+    border-radius: 12px;
   }
-  .stat-card strong { font-size: 15px; }
-  .objective-card h2 { font-size: 12px; }
-  .selected-car-letter { width: 22px; height: 22px; font-size: 12px; }
-  .selected-car-display { font-size: 8px; }
+
+  /* Objective: shrink to a pill */
+  .objective-icon {
+    margin-top: 4px;
+    font-size: 15px;
+  }
+  .objective-card h2 {
+    margin-top: 3px;
+    font-size: 12px;
+  }
+  .objective-card p { display: none; }
+
+  .card-label,
+  .stat-label { font-size: 6px; letter-spacing: 0.16em; }
+
+  .stat-card strong {
+    font-size: 15px;
+    margin-top: 3px;
+  }
+
+  .selected-car-display {
+    margin-top: 6px;
+    gap: 6px;
+    font-size: 8px;
+  }
+  .selected-car-letter {
+    width: 22px;
+    height: 22px;
+    font-size: 11px;
+    border-radius: 6px;
+  }
+}
+
+/* Mobile: only stats, compact */
+@media (max-width: 700px) {
+  .info-panel {
+    gap: 0;
+    flex-direction: row;
+  }
+
+  /* Hide objective + selected card entirely */
+  .objective-card,
+  .selected-card {
+    display: none;
+  }
+
+  .stats-row {
+    flex: 1;
+    gap: 6px;
+  }
+  .stat-card {
+    padding: 8px 10px;
+    border-radius: 9px;
+  }
+  .stat-label { font-size: 6px; }
+  .stat-card strong { font-size: 14px; margin-top: 2px; }
 }

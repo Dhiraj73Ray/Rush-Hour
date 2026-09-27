@@ -110,35 +110,75 @@
   box-shadow: 0 0 10px var(--success);
 }
 
-/* Exit indicator — hidden in topbar by default */
 .exit-in-topbar {
-  display: none;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 11px;
+  border-radius: 999px;
+  background: rgba(86, 217, 255, 0.06);
+  border: 1px solid rgba(86, 217, 255, 0.16);
+  color: var(--accent-2);
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: 0.13em;
+  white-space: nowrap;
 }
+.exit-in-topbar span { font-size: 13px; line-height: 1; }
 
 /* Tablet */
 @media (max-width: 1000px) {
-  .brand-subtitle { display: none; }
+  .brand-subtitle {
+    display: none;
+  }
 }
 
 /* Mobile */
 @media (max-width: 700px) {
-  .topbar { padding-bottom: 11px; }
-  .topbar-left { gap: 6px; }
+  .topbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    padding-bottom: 8px;
+  }
 
-  .icon-btn { width: 28px; height: 28px; }
+  .topbar-left {
+    flex: 1 1 auto;
+    min-width: 0;
+    gap: 6px;
+  }
 
-  .brand-icon { width: 32px; height: 32px; font-size: 16px; }
-  .brand-name { font-size: 12px; }
+  .topbar-right {
+    flex: 0 0 auto;
+    margin-left: auto;
+    gap: 6px;
+  }
 
-  .online-status { padding: 6px 8px; font-size: 7px; }
+  /* Level nav on its own row, centered */
+  .level-nav {
+    order: 3;
+    flex: 1 1 100%;
+    margin-top: 2px;
+    justify-content: center;
+  }
+
+  .icon-btn { width: 26px; height: 26px; }
+  .brand-icon { width: 28px; height: 28px; font-size: 14px; }
+  .brand-name { font-size: 11px; }
+  .brand-subtitle { display: none; }
+
+  .online-status {
+    padding: 5px 8px;
+    font-size: 6px;
+    gap: 4px;
+  }
+  .online-dot { width: 4px; height: 4px; }
 
   .exit-in-topbar {
-    display: flex;
-    padding: 6px 9px;
-    border-radius: 999px;
-    border: 1px solid var(--border);
-    background: rgba(86, 217, 255, 0.05);
-    font-size: 7px;
+    padding: 5px 8px;
+    font-size: 6px;
+    gap: 3px;
   }
-  .exit-in-topbar span { font-size: 11px; }
+  .exit-in-topbar span { font-size: 10px; }
 }

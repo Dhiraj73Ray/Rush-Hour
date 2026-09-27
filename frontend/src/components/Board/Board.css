@@ -8,6 +8,7 @@
   justify-content: space-between;
   align-items: end;
   margin-bottom: 10px;
+  gap: 10px;
 }
 
 .stage-label {
@@ -31,6 +32,34 @@
   font-weight: 800;
 }
 
+/* Selected-car badge (mobile only by default) */
+.stage-badge-selected {
+  display: none;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 4px 3px 8px;
+}
+.badge-label {
+  color: var(--muted);
+  font-size: 7px;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+}
+.badge-car {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 900;
+  background: var(--accent); /* fallback for "—" */
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.2),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.15);
+}
+.badge-car[class*="bg-"] { background: unset; } /* let Tailwind win when colored */
+
 /* Board */
 .board-frame {
   position: relative;
@@ -51,6 +80,12 @@
   padding: 5px;
   border-radius: 13px;
   background: #090e19;
+
+  /* Disable native scroll/zoom on the board so swipes reach us */
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
 }
 
 .board-cell {
@@ -91,14 +126,6 @@
   z-index: 3;
 }
 
-/* Exit — beside the board on desktop */
-.exit-on-board {
-  position: absolute;
-  right: -37px;
-  top: 50%;
-  transform: translateY(-50%);
-}
-
 /* Light mode */
 @media (prefers-color-scheme: light) {
   .board-frame {
@@ -110,12 +137,45 @@
   .board-cell-loading { background: rgba(0, 0, 0, 0.05); }
 }
 
+/* Tablet: tighten spacing, smaller cells */
+@media (max-width: 1000px) and (min-width: 701px) {
+  .stage-top { margin-bottom: 8px; }
+  .stage-top h1 { font-size: 15px; margin-top: 2px; }
+  .stage-label { font-size: 6px; }
+  .stage-badge { font-size: 7px; padding: 4px 6px; }
+
+  .game-stage {
+  width: 80%;
+  min-width: 0;
+}
+  .board-frame {
+    padding: 7px;
+    border-radius: 16px;
+  }
+  .game-board {
+    gap: 4px;
+    padding: 4px;
+    border-radius: 11px;
+  }
+  .board-cell {
+    border-radius: 6px;
+    font-size: clamp(16px, 2.4vw, 22px);
+  }
+}
+
 /* Mobile */
 @media (max-width: 700px) {
   .stage-top { margin-bottom: 6px; }
-  .stage-top h1 { font-size: 13px; }
-  .board-frame { padding: 6px; border-radius: 15px; }
-  .game-board { gap: 3px; padding: 3px; }
-  .board-cell { border-radius: 5px; font-size: clamp(15px, 6vw, 22px); }
-  .exit-on-board { display: none; }   /* exit moves to topbar */
+  .stage-top h1 { font-size: 12px; margin-top: 1px; }
+  .stage-label { font-size: 6px; }
+
+  .stage-badge-size { display: none; }
+  .stage-badge-selected { display: flex; }
+
+  .board-frame { padding: 5px; border-radius: 13px; }
+  .game-board { gap: 3px; padding: 3px; border-radius: 9px; }
+  .board-cell {
+    border-radius: 5px;
+    font-size: clamp(13px, 5vw, 19px);
+  }
 }

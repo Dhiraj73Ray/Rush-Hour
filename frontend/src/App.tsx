@@ -42,10 +42,10 @@ function App() {
       <TopBar
         level={4}
         online={!connectionError}
-        onMenu={() => console.log("Menu — implement later")}
-        onPrevLevel={() => console.log("Prev level — implement later")}
-        onNextLevel={() => console.log("Next level — implement later")}
-        onOpenLevels={() => console.log("Open levels — implement later")}
+        onMenu={() => console.log("Menu — later")}
+        onPrevLevel={() => console.log("Prev level — later")}
+        onNextLevel={() => console.log("Next level — later")}
+        onOpenLevels={() => console.log("Open levels — later")}
       />
 
       <main className="game-main">
@@ -59,6 +59,10 @@ function App() {
           onCellClick={handleCellClick}
           onCellEnter={handleMouseEnter}
           onCellLeave={handleMouseLeave}
+          onSwipeUp={handleMoveUp}
+          onSwipeDown={handleMoveDown}
+          onSwipeLeft={handleMoveLeft}
+          onSwipeRight={handleMoveRight}
         />
 
         <ControlsPanel

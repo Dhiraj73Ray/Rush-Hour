@@ -1,4 +1,6 @@
 import "./InfoPanel.css";
+import { getCarColor } from "../../utils/carHelpers";
+
 
 interface InfoPanelProps {
   selectedCar: string;
@@ -40,7 +42,13 @@ export const InfoPanel: React.FC<InfoPanelProps> = ({
       <div className="selected-card">
         <span className="card-label">SELECTED CAR</span>
         <div className="selected-car-display">
-          <span className="selected-car-letter">{selectedCar || "—"}</span>
+          <span
+            className={`selected-car-letter ${
+              selectedCar ? getCarColor(selectedCar) : ""
+            }`}
+          >
+            {selectedCar || "—"}
+          </span>
           <span>{selectedCar ? "Ready to move" : "Select a vehicle"}</span>
         </div>
       </div>

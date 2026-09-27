@@ -23,38 +23,87 @@
   gap: clamp(25px, 4vw, 65px);
 }
 
-/* TABLET: info on top, board + controls below */
-@media (max-width: 1000px) {
-  .game-main {
-    grid-template-columns: minmax(0, 1fr) 210px;
-    grid-template-areas:
-      "info info"
-      "stage controls";
-    align-items: start;
-    gap: 18px;
+/* ================= TABLET ================= */
+@media (max-width: 1000px) and (min-width: 701px) {
+  .game-app {
+    overflow-y: auto;
+    height: auto;
+    min-height: 100vh;
+    padding: 14px clamp(14px, 3vw, 28px);
   }
+
+  .game-main {
+    /* Cap board column at 440px so cells don't balloon */
+    grid-template-columns: minmax(0, 440px) 190px;
+    grid-template-areas:
+      "info  info"
+      "stage controls";
+    justify-content: center;   /* center the whole block */
+    align-items: start;
+    gap: 12px 20px;
+    max-width: 100%;
+    margin-top: 12px;
+  }
+
   .info-panel   { grid-area: info; }
   .game-stage   { grid-area: stage; }
-  .controls-panel { grid-area: controls; }
+
+  .controls-panel {
+    grid-area: controls;
+    /* Aligns top of controls with top of board-frame.
+       stage-top (~38px) + its margin-bottom (~8px) = ~46–50px */
+    margin-top: 50px;
+    align-self: start;
+  }
 }
 
-/* MOBILE: everything stacks */
+/* ================= MOBILE ================= */
 @media (max-width: 700px) {
-  .game-app { padding: 12px 10px; }
+  .game-app {
+    padding: 8px 10px;
+    height: 100vh;
+    height: 100dvh; /* dynamic viewport for mobile browsers */
+    overflow: hidden; /* no scroll — everything fits */
+    gap: 4px;
+  }
+
   .game-main {
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    gap: 10px;
-    padding: 10px 0;
+    justify-content: flex-start;
+    gap: 6px;
+    padding: 0;
+    flex: 1;
+    min-height: 0;
+    width: 100%;
   }
+
+  /* Board stage grows to fill remaining height, but width-capped */
+  .game-stage {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+  }
+  .game-stage .board-frame {
+    width: min(100%, calc(100dvh - 300px));
+    max-width: 100%;
+  }
+
+  /* Hide the desktop footer */
+  .game-footer { display: none; }
 }
 
-@media (prefers-color-scheme: light) {
-  .game-app {
-    background:
-      radial-gradient(circle at 50% 45%, rgba(116, 100, 217, 0.09), transparent 38%),
-      radial-gradient(circle at 10% 15%, rgba(60, 145, 178, 0.08), transparent 30%),
-      var(--bg);
+/* Fallback for browsers without dvh */
+@supports not (height: 100dvh) {
+  @media (max-width: 700px) {
+    .game-app { height: 100vh; }
+    .game-stage .board-frame {
+      width: min(100%, calc(100vh - 300px));
+    }
   }
 }

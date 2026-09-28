@@ -1,0 +1,123 @@
+.menu {
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+  background:
+    radial-gradient(circle at 50% 30%, rgba(86, 217, 255, 0.06), transparent 40%),
+    var(--bg);
+  padding: 20px;
+}
+
+.menu-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.menu-icon {
+  width: 60px;
+  height: 60px;
+  display: grid;
+  place-items: center;
+  border-radius: 18px;
+  background: linear-gradient(145deg,
+    rgba(139, 124, 255, 0.18),
+    rgba(86, 217, 255, 0.08));
+  border: 1px solid var(--border);
+  font-size: 28px;
+  margin-bottom: 10px;
+}
+
+.menu-title {
+  font-size: 24px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  color: var(--text);
+}
+.menu-subtitle {
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 0.3em;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+.menu-stats {
+  display: flex;
+  gap: 12px;
+  width: min(320px, 100%);
+}
+
+.menu-stat {
+  flex: 1;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.03);
+  text-align: center;
+}
+.menu-stat-label {
+  display: block;
+  font-size: 7px;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+  color: var(--muted);
+}
+.menu-stat strong {
+  display: block;
+  margin-top: 4px;
+  font-size: 20px;
+  font-weight: 900;
+  color: var(--accent-2);
+}
+
+.menu-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: min(320px, 100%);
+}
+
+.menu-btn {
+  padding: 14px 20px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-align: left;
+}
+.menu-btn:hover {
+  background: rgba(255, 255, 255, 0.06);
+  transform: translateX(2px);
+}
+.menu-btn:active { transform: scale(0.98); }
+
+.menu-btn.primary {
+  background: linear-gradient(145deg, #5ce1e6, #4ac7cc);
+  color: #14141e;
+  border: none;
+  box-shadow: 0 12px 30px rgba(92, 225, 230, 0.2);
+}
+.menu-btn.primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 16px 40px rgba(92, 225, 230, 0.3);
+}
+
+@media (prefers-color-scheme: light) {
+  .menu {
+    background:
+      radial-gradient(circle at 50% 30%, rgba(60, 145, 178, 0.08), transparent 40%),
+      var(--bg);
+  }
+}

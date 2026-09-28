@@ -1,0 +1,93 @@
+.landing {
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(circle at 50% 40%, rgba(86, 217, 255, 0.08), transparent 40%),
+    radial-gradient(circle at 15% 80%, rgba(139, 124, 255, 0.1), transparent 35%),
+    var(--bg);
+  padding: 20px;
+}
+
+.landing-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 8px;
+  animation: landingFade 0.6s ease-out;
+}
+
+.landing-icon {
+  width: 88px;
+  height: 88px;
+  display: grid;
+  place-items: center;
+  border-radius: 24px;
+  background: linear-gradient(145deg,
+    rgba(139, 124, 255, 0.2),
+    rgba(86, 217, 255, 0.1));
+  border: 1px solid var(--border);
+  font-size: 44px;
+  margin-bottom: 12px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+}
+
+.landing-title {
+  font-size: clamp(34px, 8vw, 52px);
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  color: var(--text);
+}
+
+.landing-subtitle {
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.35em;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+.landing-tagline {
+  margin-top: 18px;
+  max-width: 320px;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+.landing-btn {
+  margin-top: 36px;
+  padding: 14px 56px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 900;
+  letter-spacing: 0.2em;
+  color: #14141e;
+  background: linear-gradient(145deg, #5ce1e6, #4ac7cc);
+  box-shadow: 0 12px 30px rgba(92, 225, 230, 0.25);
+  transition: all 0.2s ease;
+}
+.landing-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 40px rgba(92, 225, 230, 0.35);
+}
+.landing-btn:active { transform: scale(0.97); }
+
+@keyframes landingFade {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-color-scheme: light) {
+  .landing {
+    background:
+      radial-gradient(circle at 50% 40%, rgba(60, 145, 178, 0.1), transparent 40%),
+      radial-gradient(circle at 15% 80%, rgba(116, 100, 217, 0.1), transparent 35%),
+      var(--bg);
+  }
+}

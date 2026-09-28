@@ -32,3 +32,11 @@ export interface LevelInfo {
   name: string;
   difficulty: "easy" | "medium" | "hard";
 }
+
+export interface LevelProgress {
+  level: number;
+  solved: boolean;
+  bestMoves: number;
+  bestSeconds: number;
+  solvedAt: number;
+}

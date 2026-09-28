@@ -24,8 +24,8 @@
 
 .picker-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  gap: 12px;
   margin-bottom: 16px;
 }
 .picker-header h2 {
@@ -34,6 +34,20 @@
   letter-spacing: 0.06em;
   color: var(--text);
 }
+
+.picker-progress {
+  margin-left: auto;
+  margin-right: 4px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(72, 224, 155, 0.08);
+  border: 1px solid rgba(72, 224, 155, 0.18);
+  color: var(--success);
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+}
+
 .picker-close {
   width: 28px;
   height: 28px;
@@ -43,8 +57,12 @@
   color: var(--muted);
   cursor: pointer;
   font-size: 13px;
+  transition: all 0.15s ease;
 }
-.picker-close:hover { color: var(--text); background: rgba(255,255,255,0.05); }
+.picker-close:hover {
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.05);
+}
 
 .picker-grid {
   display: grid;
@@ -53,6 +71,7 @@
 }
 
 .picker-tile {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -69,9 +88,36 @@
   background: rgba(255, 255, 255, 0.07);
   transform: translateY(-2px);
 }
+
 .picker-tile.active {
   border-color: var(--accent-2);
-  box-shadow: 0 0 0 1px var(--accent-2), 0 6px 20px rgba(86,217,255,0.15);
+  background: rgba(86, 218, 255, 0.236);
+  box-shadow: 2px 2px 0 1px var(--accent-2);
+}
+
+.picker-tile.solved {
+  border-color: rgba(72, 224, 155, 0.3);
+  background: linear-gradient(
+    145deg,
+    rgba(72, 224, 155, 0.06),
+    rgba(255, 255, 255, 0.01)
+  );
+}
+
+.tile-check {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  width: 18px;
+  height: 18px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--success);
+  color: #0b1120;
+  font-size: 10px;
+  font-weight: 900;
+  box-shadow: 0 0 10px rgba(72, 224, 155, 0.4);
 }
 
 .tile-index {
@@ -91,7 +137,10 @@
 .picker-tile.diff-medium { border-left: 3px solid #f5b042; }
 .picker-tile.diff-hard   { border-left: 3px solid #ef4444; }
 
-@keyframes pickerFade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes pickerFade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
 @keyframes pickerPop {
   from { opacity: 0; transform: scale(0.9); }
   to   { opacity: 1; transform: scale(1); }

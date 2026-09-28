@@ -1,0 +1,151 @@
+.levels-page {
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: var(--bg);
+  padding: 22px clamp(16px, 4vw, 60px);
+  overflow-y: auto;
+}
+
+.levels-header {
+  width: min(1100px, 100%);
+  margin: 0 auto 22px;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 12px;
+}
+
+.back-btn {
+  justify-self: start;
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.back-btn:hover { color: var(--text); background: rgba(255, 255, 255, 0.04); }
+
+.levels-header h1 {
+  font-size: 14px;
+  font-weight: 900;
+  letter-spacing: 0.24em;
+  color: var(--text);
+}
+
+.levels-count {
+  justify-self: end;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  color: var(--accent-2);
+}
+
+.levels-msg {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.levels-grid {
+  width: min(1100px, 100%);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 12px;
+}
+
+.level-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  padding: 18px 16px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: linear-gradient(145deg,
+    rgba(255, 255, 255, 0.04),
+    rgba(255, 255, 255, 0.01));
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.15s ease;
+  min-height: 110px;
+}
+.level-card:hover {
+  background: rgba(255, 255, 255, 0.07);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.3);
+}
+.level-card:active { transform: scale(0.98); }
+
+.level-num {
+  font-size: 24px;
+  font-weight: 900;
+  color: var(--accent-2);
+  line-height: 1;
+}
+.level-name {
+  margin-top: 4px;
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--text);
+}
+.level-diff {
+  margin-top: 2px;
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.level-best {
+  margin-top: 8px;
+  font-size: 9px;
+  color: var(--muted);
+}
+
+.level-check {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  width: 20px;
+  height: 20px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--success);
+  color: #0b1120;
+  font-size: 11px;
+  font-weight: 900;
+  box-shadow: 0 0 12px rgba(72, 224, 155, 0.4);
+}
+
+.level-card.diff-easy   { border-left: 3px solid var(--success); }
+.level-card.diff-medium { border-left: 3px solid #f5b042; }
+.level-card.diff-hard   { border-left: 3px solid #ef4444; }
+
+.level-card.solved {
+  border-color: rgba(72, 224, 155, 0.3);
+  background: linear-gradient(145deg,
+    rgba(72, 224, 155, 0.06),
+    rgba(255, 255, 255, 0.01));
+}
+
+@media (max-width: 700px) {
+  .levels-page { padding: 16px 12px; }
+  .levels-header h1 { font-size: 12px; }
+  .levels-grid {
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 8px;
+  }
+  .level-card { padding: 14px 12px; min-height: 96px; }
+  .level-num { font-size: 20px; }
+  .level-name { font-size: 11px; }
+}

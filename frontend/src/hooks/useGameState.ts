@@ -10,7 +10,11 @@ import {
 
 const LEVEL_KEY = "rushhour.currentLevel";
 
-export const useGameState = () => {
+interface UseGameStateOptions {
+  initialLevel?: number | null;
+}
+
+export const useGameState = (options?: UseGameStateOptions) => {
   const [gameState, setGameState] = useState<GameState | null>(null);
   const [levels, setLevels] = useState<LevelInfo[]>([]);
   const [selectedCar, setSelectedCar] = useState<string>("");
@@ -21,58 +25,87 @@ export const useGameState = () => {
   const [moves, setMoves] = useState(0);
   const [showCongrats, setShowCongrats] = useState(false);
 
-  const didInit = useRef(false);
+  const initialLevel = options?.initialLevel ?? null;
+  const loadedInitialRef = useRef(false);
 
   const loadInitialState = useCallback(async () => {
     setInitialLoading(true);
     try {
-      const [state, levelList] = await Promise.all([getGameState(), getLevels()]);
+      const [state, levelList] = await Promise.all([
+        getGameState(),
+        getLevels(),
+      ]);
       setLevels(levelList.levels);
 
-      // Restore saved level from localStorage (only on first mount)
-      if (!didInit.current) {
-        didInit.current = true;
-        const saved = Number(localStorage.getItem(LEVEL_KEY));
-        if (!Number.isNaN(saved) && saved >= 0 && saved < levelList.total && saved !== state.level) {
-          const loaded = await postLoadLevel(saved);
-          setGameState(loaded);
-          setMoves(0);
-          setConnectionError(false);
-          return;
-        }
+      // Pick which level to show
+      let target = state;
+      if (
+        initialLevel != null &&
+        initialLevel >= 0 &&
+        initialLevel < levelList.total &&
+        initialLevel !== state.level
+      ) {
+        target = await postLoadLevel(initialLevel);
+        setMoves(0);
       }
-
-      setGameState(state);
+      setGameState(target);
       setConnectionError(false);
     } catch {
       setConnectionError(true);
     } finally {
       setInitialLoading(false);
     }
-  }, []);
+  }, [initialLevel]);
 
+  // Initial fetch
   useEffect(() => {
     loadInitialState();
-  }, [loadInitialState]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
+  // Re-load when initialLevel changes (URL-driven navigation)
   useEffect(() => {
-    if (gameState?.is_won) {
-      if (moves > 0) {
-        setShowCongrats(true);
+    if (!loadedInitialRef.current) {
+      loadedInitialRef.current = true;
+      return;
+    }
+    if (initialLevel == null) return;
+    if (gameState?.level === initialLevel) return;
+    (async () => {
+      setActionLoading(true);
+      setShowCongrats(false);
+      try {
+        const data = await postLoadLevel(initialLevel);
+        setGameState(data);
+        setSelectedCar("");
+        setMoves(0);
+        setConnectionError(false);
+      } catch {
+        setConnectionError(true);
+      } finally {
+        setActionLoading(false);
       }
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialLevel]);
+
+  // Congratulate on win
+  useEffect(() => {
+    if (gameState?.is_won && moves > 0) {
+      setShowCongrats(true);
     } else {
       setShowCongrats(false);
     }
   }, [gameState?.is_won, moves]);
 
-  // Auto-retry while connection is down
+  // Auto-retry when backend is down
   useEffect(() => {
     if (!connectionError) return;
     const id = setInterval(loadInitialState, 5000);
     return () => clearInterval(id);
   }, [connectionError, loadInitialState]);
 
-  // Persist current level
+  // Persist level
   useEffect(() => {
     if (gameState && gameState.level >= 0) {
       localStorage.setItem(LEVEL_KEY, String(gameState.level));
@@ -132,17 +165,15 @@ export const useGameState = () => {
     }
   }, []);
 
-  // Keyboard controls
+  // Keyboard
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (!selectedCar || !gameState) return;
       const car = gameState.cars[selectedCar];
       if (!car) return;
-
       const arrows = ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"];
       if (!arrows.includes(e.key)) return;
       e.preventDefault();
-
       if (car.direction === "H") {
         if (e.key === "ArrowLeft") sendMove(selectedCar, -1);
         else if (e.key === "ArrowRight") sendMove(selectedCar, 1);
@@ -155,10 +186,10 @@ export const useGameState = () => {
     return () => window.removeEventListener("keydown", onKey);
   }, [selectedCar, gameState, sendMove]);
 
-  const handleMoveUp = useCallback((car: string) => sendMove(car, -1), [sendMove]);
-  const handleMoveDown = useCallback((car: string) => sendMove(car, 1), [sendMove]);
-  const handleMoveLeft = useCallback((car: string) => sendMove(car, -1), [sendMove]);
-  const handleMoveRight = useCallback((car: string) => sendMove(car, 1), [sendMove]);
+  const handleMoveUp = useCallback((c: string) => sendMove(c, -1), [sendMove]);
+  const handleMoveDown = useCallback((c: string) => sendMove(c, 1), [sendMove]);
+  const handleMoveLeft = useCallback((c: string) => sendMove(c, -1), [sendMove]);
+  const handleMoveRight = useCallback((c: string) => sendMove(c, 1), [sendMove]);
 
   const resetGame = useCallback(async () => {
     setActionLoading(true);
@@ -183,14 +214,19 @@ export const useGameState = () => {
 
   const goNextLevel = useCallback(() => {
     if (!gameState) return;
-    if (gameState.level < gameState.total_levels - 1) loadLevel(gameState.level + 1);
+    if (gameState.level < gameState.total_levels - 1)
+      loadLevel(gameState.level + 1);
   }, [gameState, loadLevel]);
 
-  const retryConnection = useCallback(() => loadInitialState(), [loadInitialState]);
+  const retryConnection = useCallback(
+    () => loadInitialState(),
+    [loadInitialState]
+  );
 
   return {
     gameState,
     levels,
+    setLevels,
     initialLoading,
     actionLoading,
     connectionError,

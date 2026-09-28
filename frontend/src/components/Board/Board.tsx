@@ -134,7 +134,7 @@ export const Board: React.FC<BoardProps> = ({
       <div className="stage-top">
         <div>
           <span className="stage-label">TRAFFIC GRID</span>
-          <h1>Find the way out.</h1>
+          <h1>Find the way out for Car <strong>A</strong></h1>
         </div>
 
         <div className="stage-badge stage-badge-size">

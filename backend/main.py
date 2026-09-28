@@ -16,7 +16,7 @@ ALLOWED_ORIGINS = [
 # Production frontend URL from Render env var
 frontend_url = os.getenv("FRONTEND_URL")
 if frontend_url:
-    ALLOWED_ORIGINS.append(frontend_url)
+    ALLOWED_ORIGINS.append(frontend_url.rstrip("/"))
 
 app.add_middleware(
     CORSMiddleware,

@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useOverlayHistory } from "../../hooks/useOverlayHistory";
 import "./CongratsOverlay.css";
 
 interface CongratsOverlayProps {
@@ -16,6 +17,18 @@ const CongratsOverlay: React.FC<CongratsOverlayProps> = ({
   onClose,
   zIndex = 9999,
 }) => {
+  useEffect(() => {
+    if (!isVisible || !onClose) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [isVisible, onClose]);
+
+  // NEW — only wire history if there's a close handler
+  useOverlayHistory(isVisible && !!onClose, onClose ?? (() => {}));
+
   if (!isVisible) return null;
 
   return (

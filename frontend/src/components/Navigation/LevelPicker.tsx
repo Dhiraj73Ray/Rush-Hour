@@ -1,5 +1,7 @@
+import { useEffect } from "react";
 import { type LevelInfo } from "../../types/game";
 import { useProgress } from "../../hooks/useProgress";
+import { useOverlayHistory } from "../../hooks/useOverlayHistory";
 import "./LevelPicker.css";
 
 interface LevelPickerProps {
@@ -18,6 +20,17 @@ export const LevelPicker: React.FC<LevelPickerProps> = ({
   onClose,
 }) => {
   const { progress } = useProgress();
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [isOpen, onClose]);
+
+  useOverlayHistory(isOpen, onClose);
 
   if (!isOpen) return null;
 

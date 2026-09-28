@@ -157,15 +157,6 @@ Clear them from DevTools → Application → Storage to reset.
 
 ---
 
-## Roadmap
-
-- [ ] More puzzles (20–50 across easy/medium/hard)
-- [ ] Backend tests for `engine.py`
-- [ ] Undo + move history within a puzzle
-- [ ] Deploy (Render/Railway + Vercel/Netlify)
-
----
-
 ## License
 
 Personal project.

@@ -2,6 +2,8 @@
 
 # 🚗 Rush Hour
 
+**Live:** https://play-rush-hour.vercel.app
+
 Full-stack Rush Hour puzzle game. Slide the red car (A) out of the traffic jam.
 
 - **Backend:** FastAPI + pure-Python engine
@@ -31,21 +33,6 @@ Optional — point at a different backend via `frontend/.env`:
 ```
 VITE_API_URL=http://127.0.0.1:8000
 ```
-
----
-
-## Routes
-
-| Path | Page | Notes |
-|---|---|---|
-| `/` | Landing | Only shown once per browser session |
-| `/menu` | Main Menu | Continue / New Game / Levels / History |
-| `/play` | Game | Resumes last-played level |
-| `/play/:level` | Game | Loads a specific level by index |
-| `/levels` | Levels | Full-page grid with progress + best stats |
-| `/history` | History | Solved puzzles, newest first |
-
-**Session behavior:** Landing appears on fresh tab/browser open. Refreshing on any route stays put — no bounce back to Landing.
 
 ---
 
@@ -106,54 +93,6 @@ LEVELS = [
 - Puzzle must be solvable
 
 Bad puzzles crash the backend on startup with a clear error. Restart uvicorn and check the terminal.
-
----
-
-## API
-
-| Method | Endpoint | Body | Returns |
-|---|---|---|---|
-| GET | `/api/state` | — | current `GameState` |
-| GET | `/api/levels` | — | `{ levels, total }` |
-| POST | `/api/load` | `{ "level": 0 }` | `GameState` |
-| POST | `/api/move` | `{ "car_id": "A", "steps": 1 }` | `GameState` |
-| POST | `/api/reset` | — | `GameState` |
-
-Move `status` values: `ok`, `blocked`, `wall`, `invalid`, `not_found`.
-
----
-
-## Structure
-
-```
-backend/
-  engine.py     # game logic
-  levels.py     # puzzle list
-  main.py       # FastAPI routes
-
-frontend/src/
-  router/       # AppRouter (route table)
-  pages/        # Landing, MainMenu, Game, Levels, History
-  components/   # Board, Controls, HUD, Layout, Navigation, overlays
-  hooks/        # useGameState, useTimer, useProgress, useSession
-  api/          # gameApi.ts
-  utils/        # carHelpers.ts
-  types/        # game.ts
-```
-
----
-
-## Storage keys
-
-All client-side, no backend persistence:
-
-| Key | Storage | Purpose |
-|---|---|---|
-| `rushhour.sessionActive` | `sessionStorage` | Skip landing on refresh |
-| `rushhour.currentLevel` | `localStorage` | Resume last-played level |
-| `rushhour.progress` | `localStorage` | Solved levels + best stats |
-
-Clear them from DevTools → Application → Storage to reset.
 
 ---
 

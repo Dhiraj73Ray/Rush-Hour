@@ -1,9 +1,10 @@
 .game-app {
   width: 100%;
-  height: 100vh;
+  min-height: 100vh;      /* was height: 100vh */
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  /* removed: overflow: hidden */
   background:
     radial-gradient(circle at 50% 45%, rgba(86, 217, 255, 0.045), transparent 35%),
     radial-gradient(circle at 15% 20%, rgba(139, 124, 255, 0.07), transparent 30%),
@@ -26,9 +27,6 @@
 /* ================= TABLET ================= */
 @media (max-width: 1000px) and (min-width: 701px) {
   .game-app {
-    overflow-y: auto;
-    height: auto;
-    min-height: 100vh;
     padding: 14px clamp(14px, 3vw, 28px);
   }
 
@@ -61,40 +59,33 @@
 @media (max-width: 700px) {
   .game-app {
     padding: 8px 10px;
-    height: 100vh;
-    height: 100dvh; /* dynamic viewport for mobile browsers */
-    overflow: hidden; /* no scroll — everything fits */
     gap: 4px;
+    /* removed: height: 100vh/dvh, overflow: hidden */
   }
 
   .game-main {
     display: flex;
     flex-direction: column;
-    align-items: stretch;
-    justify-content: flex-start;
     gap: 6px;
     padding: 0;
-    flex: 1;
+    flex: 1 1 auto;
     min-height: 0;
     width: 100%;
   }
 
-  /* Board stage grows to fill remaining height, but width-capped */
   .game-stage {
-    flex: 1;
-    min-height: 0;
+    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    width: 100%;
-  }
-  .game-stage .board-frame {
-    width: min(100%, calc(100dvh - 300px));
-    max-width: 100%;
+    /* removed: flex: 1; min-height: 0 — no longer forcing it to fit */
   }
 
-  /* Hide the desktop footer */
+  .game-stage .board-frame {
+    width: 100%;
+    max-width: 420px;     /* was calc(100dvh - 300px) — that shrunk to nothing in landscape */
+  }
+
   .game-footer { display: none; }
 }
 

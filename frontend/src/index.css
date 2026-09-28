@@ -87,7 +87,3 @@ body::-webkit-scrollbar {
   }
   body { background: var(--bg); }
 }
-
-body:has(.game-app) {
-  overflow: hidden;
-}

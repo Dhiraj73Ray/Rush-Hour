@@ -252,12 +252,12 @@
 /* ============ TABLET ============ */
 
 @media (max-width: 1000px) and (min-width: 701px) {
-  .stage-top { margin-bottom: 8px; }
+  .stage-top { margin-bottom: 8px; width: 80%; }
   .stage-top h1 { font-size: 15px; margin-top: 2px; }
   .stage-label { font-size: 6px; }
   .stage-badge { font-size: 7px; padding: 4px 6px; }
 
-  .board-frame { padding: 7px; border-radius: 16px; }
+  .board-frame { padding: 7px; width: 80%; border-radius: 16px; }
   .game-board { border-radius: 11px; }
   .car-piece {
     border-radius: 6px;

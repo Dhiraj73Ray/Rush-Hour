@@ -28,6 +28,7 @@
 @media (max-width: 1000px) and (min-width: 701px) {
   .game-app {
     padding: 14px clamp(14px, 3vw, 28px);
+    /* width: 80%; */
   }
 
   .game-main {
@@ -50,7 +51,7 @@
     grid-area: controls;
     /* Aligns top of controls with top of board-frame.
        stage-top (~38px) + its margin-bottom (~8px) = ~46–50px */
-    margin-top: 50px;
+    /* margin-top: 50px; */
     align-self: start;
   }
 }

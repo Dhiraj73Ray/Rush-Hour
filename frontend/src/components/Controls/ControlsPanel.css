@@ -140,11 +140,11 @@
 /* Tablet: narrower, compact */
 @media (max-width: 1000px) and (min-width: 701px) {
   .controls-panel {
-    margin-top: 100px;
     margin-left: -60px;
     width: 250px;
     padding: 14px 12px;
     border-radius: 15px;
+    margin-top: 90px;
   }
 
   .controls-title {

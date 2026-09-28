@@ -144,7 +144,9 @@ export const Board: React.FC<BoardProps> = ({
         <div className="stage-badge stage-badge-selected">
           <span className="badge-label">SELECTED</span>
           <span
-            className={`badge-car ${selectedCar ? getCarColor(selectedCar) : ""}`}
+            className={`badge-car ${
+              selectedCar ? getCarColor(selectedCar) : "badge-car-empty"
+            }`}
           >
             {selectedCar || "—"}
           </span>
